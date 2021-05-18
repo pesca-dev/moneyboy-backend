@@ -16,7 +16,7 @@
         "name": "H1ghBre4k3r",
         "email": "h1ghbre4k3r@dev.bre4k3r.de"
     },
-    "license": "ISC",
+    "license": "GNU GPLv3",
     "dependencies": {
         "express": "^4.17.1"
     },
