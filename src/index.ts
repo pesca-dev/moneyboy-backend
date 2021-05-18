@@ -1,8 +1,5 @@
-import express from "express";
+import { Server } from "./server/server";
 
-const server = express();
-server.get("/", (_, res) => {
-    res.send("Hello, world!");
-});
-
-server.listen(3000);
+(async () => {
+    new Server();
+})();
