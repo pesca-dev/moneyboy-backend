@@ -1,5 +1,14 @@
-import { Server } from "./server/server";
+import $ from "logsen";
+import { createServer } from "./server";
 
-(async () => {
-    new Server();
+const PORT = 3000;
+
+(() => {
+    const server = createServer();
+
+    function listenCallback() {
+        $.success(`Listening on port :${PORT}`);
+    }
+
+    server.listen(PORT, listenCallback);
 })();
