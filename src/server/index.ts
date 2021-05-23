@@ -1,3 +1,5 @@
+import express from "express";
+
 import { bind } from "./bind";
 import { initServer } from "./init";
 
@@ -11,15 +13,19 @@ export interface Server {
     listen(port: number, cb?: () => void): void;
 }
 
+type CreateServerParams = {
+    routers?: Map<string, express.Router>;
+};
+
 /**
  * Create a new server instance.
  *
  * @returns the newly created server instance
  */
-export function createServer(): Server {
+export function createServer({ routers }: CreateServerParams): Server {
     const server = initServer();
 
-    bind(server);
+    bind(server, routers);
 
     function listen(port: number, cb?: () => void) {
         server.listen(port, cb);
