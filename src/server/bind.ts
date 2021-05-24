@@ -1,6 +1,7 @@
 import express from "express";
+import $ from "logsen";
 
-import { authenticateToken } from "../auth";
+import { authenticateToken } from "./routes/auth";
 
 const posts = [
     {
@@ -22,6 +23,7 @@ export function bind(server: express.Application, routers?: Map<string, express.
     if (routers) {
         for (let [routeName, router] of routers) {
             server.use(routeName, router);
+            $.info(`Registered router for route '${routeName}'!`);
         }
     }
 

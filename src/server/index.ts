@@ -2,6 +2,7 @@ import express from "express";
 
 import { bind } from "./bind";
 import { initServer } from "./init";
+import { createAuthRouter } from "./routes/auth";
 
 export interface Server {
     /**
@@ -13,17 +14,18 @@ export interface Server {
     listen(port: number, cb?: () => void): void;
 }
 
-type CreateServerParams = {
-    routers?: Map<string, express.Router>;
-};
-
 /**
  * Create a new server instance.
  *
  * @returns the newly created server instance
  */
-export function createServer({ routers }: CreateServerParams): Server {
+export function createServer(): Server {
     const server = initServer();
+
+    const authRouter = createAuthRouter();
+
+    const routers = new Map<string, express.Router>();
+    routers.set("/auth", authRouter);
 
     bind(server, routers);
 
