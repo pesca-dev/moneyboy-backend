@@ -1,4 +1,5 @@
 import express from "express";
+import { Auth } from "../api/auth";
 
 import { bind } from "./bind";
 import { initServer } from "./init";
@@ -14,20 +15,24 @@ export interface Server {
     listen(port: number, cb?: () => void): void;
 }
 
+type CreateServerParams = {
+    auth: Auth.Module;
+};
+
 /**
  * Create a new server instance.
  *
  * @returns the newly created server instance
  */
-export function createServer(): Server {
+export function createServer({ auth }: CreateServerParams): Server {
     const server = initServer();
 
-    const authRouter = createAuthRouter();
+    const authRouter = createAuthRouter({ auth });
 
     const routers = new Map<string, express.Router>();
     routers.set("/auth", authRouter);
 
-    bind(server, routers);
+    bind(server, routers, auth);
 
     function listen(port: number, cb?: () => void) {
         server.listen(port, cb);

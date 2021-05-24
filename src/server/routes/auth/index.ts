@@ -1,27 +1,19 @@
 import express from "express";
-import jwt from "jsonwebtoken";
+import { Auth } from "../../../api/auth";
 
 import { createLoginRoute } from "./login";
 import { createRefreshTokenRoute } from "./token";
 
-const { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } = process.env;
+type CreateAuthRouterParams = {
+    auth: Auth.Module;
+};
 
 /**
  * Create a router with all relevent auth functions attached.
  * @returns the created router
  */
-export function createAuthRouter(): express.Router {
-    function generateRefreshToken(obj: any) {
-        return jwt.sign(obj, REFRESH_TOKEN_SECRET ?? "");
-    }
-
-    function generateAccessToken(obj: any) {
-        return jwt.sign(obj, ACCESS_TOKEN_SECRET ?? "", { expiresIn: "15m" });
-    }
-
-    function verifyRefreshToken(token: string, cb: (err: any, decoded: any) => void) {
-        jwt.verify(token, REFRESH_TOKEN_SECRET ?? "", cb);
-    }
+export function createAuthRouter({ auth }: CreateAuthRouterParams): express.Router {
+    const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = auth;
 
     const router = express.Router();
 
@@ -32,26 +24,4 @@ export function createAuthRouter(): express.Router {
     router.post("/token", refreshTokenRoute);
 
     return router;
-}
-
-/**
- * Middleware for authenticating a request via checking for a provided token in the auth header.
- */
-export function authenticateToken(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader?.split(" ")[1] as string;
-
-    if (!token) {
-        res.sendStatus(401);
-        return;
-    }
-
-    jwt.verify(token, ACCESS_TOKEN_SECRET ?? "", (err, user) => {
-        if (err) {
-            res.sendStatus(403);
-            return;
-        }
-        (req as any).user = user;
-        next();
-    });
 }

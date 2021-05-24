@@ -1,7 +1,6 @@
 import express from "express";
 import $ from "logsen";
-
-import { authenticateToken } from "./routes/auth";
+import { Auth } from "../api/auth";
 
 const posts = [
     {
@@ -19,7 +18,7 @@ const posts = [
  *
  * @param server server to bind the routes for
  */
-export function bind(server: express.Application, routers?: Map<string, express.Router>) {
+export function bind(server: express.Application, routers: Map<string, express.Router>, auth: Auth.Module) {
     if (routers) {
         for (let [routeName, router] of routers) {
             server.use(routeName, router);
@@ -27,7 +26,7 @@ export function bind(server: express.Application, routers?: Map<string, express.
         }
     }
 
-    server.get("/posts", authenticateToken, (req, res) => {
+    server.get("/posts", auth.authenticateToken, (req, res) => {
         res.json(posts.filter(post => post.username === (req as any).user.name));
     });
 
