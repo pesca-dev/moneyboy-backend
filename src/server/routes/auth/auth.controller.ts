@@ -1,15 +1,27 @@
-import { Controller, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
+
+import { IsString } from "class-validator";
+
+// TODO lome: move this to extra file
+export class User {
+    @IsString()
+    readonly username!: string;
+
+    @IsString()
+    readonly password!: string;
+}
 
 @Controller("/auth")
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post("login")
-    public postLogin(@Req() req: Request, @Res() res: Response) {
+    public postLogin(@Req() req: Request, @Res() res: Response, @Body() body: User) {
         // TODO lome: add actual authentication
         const username = req.body.username;
+        console.log(body);
         if (!username) {
             // check for invalid request
             res.sendStatus(401);
