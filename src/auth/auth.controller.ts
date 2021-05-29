@@ -1,26 +1,22 @@
+import { UserLoginDTOImpl, UserRegisterDTOImpl } from "@auth/types/user";
 import { Body, Controller, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
-
-import { IsString } from "class-validator";
-
-// TODO lome: move this to extra file
-export class User {
-    @IsString()
-    readonly username!: string;
-
-    @IsString()
-    readonly password!: string;
-}
 
 @Controller()
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
+    @Post("register")
+    public postRegister(@Req() _req: Request, @Res() res: Response, @Body() body: UserRegisterDTOImpl) {
+        console.log(body);
+        res.sendStatus(202);
+    }
+
     @Post("login")
-    public postLogin(@Req() req: Request, @Res() res: Response, @Body() body: User) {
+    public postLogin(@Req() _req: Request, @Res() res: Response, @Body() body: UserLoginDTOImpl) {
         // TODO lome: add actual authentication
-        const username = req.body.username;
+        const username = body.username;
         console.log(body);
         if (!username) {
             // check for invalid request
