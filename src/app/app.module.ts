@@ -1,11 +1,15 @@
 import { MiddlewareConsumer, Module } from "@nestjs/common";
+import { RouterModule } from "nest-router";
+
+import { AuthModule } from "@auth/auth.module";
+import { AuthService } from "@auth/auth.service";
+import routes from "@config/routes";
+
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { AuthModule } from "./routes/auth/auth.module";
-import { AuthService } from "./routes/auth/auth.service";
 
 @Module({
-    imports: [AuthModule],
+    imports: [RouterModule.forRoutes(routes), AuthModule],
     controllers: [AppController],
     providers: [AppService],
 })

@@ -13,7 +13,7 @@ export class User {
     readonly password!: string;
 }
 
-@Controller("/auth")
+@Controller()
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 

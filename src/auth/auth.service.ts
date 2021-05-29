@@ -1,21 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import express from "express";
 import jwt from "jsonwebtoken";
+import config from "@config/variables";
 
-const { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } = process.env;
+const { accessTokenSecret, refreshTokenSecret } = config.token;
 
 @Injectable()
 export class AuthService {
     public generateRefreshToken(obj: any) {
-        return jwt.sign(obj, REFRESH_TOKEN_SECRET ?? "");
+        return jwt.sign(obj, refreshTokenSecret ?? "");
     }
 
     public generateAccessToken(obj: any) {
-        return jwt.sign(obj, ACCESS_TOKEN_SECRET ?? "", { expiresIn: "15m" });
+        return jwt.sign(obj, accessTokenSecret ?? "", { expiresIn: "15m" });
     }
 
     public verifyRefreshToken(token: string, cb: (err: any, decoded: any) => void) {
-        jwt.verify(token, REFRESH_TOKEN_SECRET ?? "", cb);
+        jwt.verify(token, refreshTokenSecret ?? "", cb);
     }
 
     public static authenticateToken(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -27,7 +28,7 @@ export class AuthService {
             return;
         }
 
-        jwt.verify(token, ACCESS_TOKEN_SECRET ?? "", (err, user) => {
+        jwt.verify(token, accessTokenSecret ?? "", (err, user) => {
             if (err) {
                 console.log(err);
                 res.sendStatus(403);
