@@ -3,6 +3,11 @@ import { Body, Controller, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 
+/**
+ * Controller for handling authentication.
+ *
+ * @author Louis Meyer
+ */
 @Controller()
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
@@ -14,32 +19,18 @@ export class AuthController {
     }
 
     @Post("login")
-    public postLogin(@Req() _req: Request, @Res() res: Response, @Body() body: UserLoginDTOImpl) {
-        // TODO lome: add actual authentication
-        const username = body.username;
-        console.log(body);
-        if (!username) {
-            // check for invalid request
+    public postLogin(@Req() _req: Request, @Res() res: Response, @Body() user: UserLoginDTOImpl) {
+        const [err, token] = this.authService.login(user);
+        if (err) {
             res.sendStatus(401);
-            return;
+        } else {
+            res.json(token);
         }
-
-        const user = {
-            name: username,
-        };
-
-        // TODO lome: maybe do both at once
-        const accessToken = this.authService.generateAccessToken(user);
-        const refreshToken = this.authService.generateRefreshToken(user);
-
-        // TODO lome: store refresh tokens somewhere
-        // refreshTokens.push(refreshToken);
-
-        res.json({ accessToken, refreshToken });
     }
 
     @Post("token")
-    public postRefreshToken(@Req() req: Request, @Res() res: Response) {
+    public async postRefreshToken(@Req() req: Request, @Res() res: Response) {
+        // TODO lome: refactor
         const refreshToken = req.body.token as string;
         if (!refreshToken) {
             res.sendStatus(401);
@@ -51,15 +42,11 @@ export class AuthController {
         //     res.sendStatus(403);
         //     return;
         // }
-
-        this.authService.verifyRefreshToken(refreshToken, (err, user) => {
-            if (err) {
-                res.sendStatus(403);
-                return;
-            }
-
-            const accessToken = this.authService.generateAccessToken({ name: user.name });
-            res.json({ accessToken });
-        });
+        const [err, accessToken] = await this.authService.verifyRefreshToken(refreshToken);
+        if (err) {
+            res.sendStatus(403);
+            return;
+        }
+        res.json({ accessToken });
     }
 }

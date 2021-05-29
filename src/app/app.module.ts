@@ -2,19 +2,22 @@ import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { RouterModule } from "nest-router";
 
 import { AuthModule } from "@auth/auth.module";
-import { AuthService } from "@auth/auth.service";
+import { TokenService } from "@token/token.service";
 import routes from "@config/routes";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { TokenModule } from "@token/token.module";
 
 @Module({
-    imports: [RouterModule.forRoutes(routes), AuthModule],
+    imports: [RouterModule.forRoutes(routes), AuthModule, TokenModule],
     controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {
+    constructor(private readonly tokenService: TokenService) {}
+
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AuthService.authenticateToken).forRoutes("posts");
+        consumer.apply(this.tokenService.authenticateToken.bind(this.tokenService)).forRoutes("*");
     }
 }

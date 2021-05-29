@@ -1,41 +1,75 @@
 import { Injectable } from "@nestjs/common";
-import express from "express";
-import jwt from "jsonwebtoken";
-import config from "@config/variables";
+import { TokenService } from "token/token.service";
+import { UserLoginDTO } from "@interfaces/user";
+import { MaybeError } from "@interfaces/error";
+import { UserService } from "@user/user.service";
+import { SessionService } from "@session/session.service";
 
-const { accessTokenSecret, refreshTokenSecret } = config.token;
+const defaultUsers = ["louis", "tom", "test"];
 
+type TokenObject = {
+    accessToken: string;
+    refreshToken: string;
+};
+
+/**
+ * Service for handling authentication.
+ *
+ * @author Louis Meyer
+ */
 @Injectable()
 export class AuthService {
-    public generateRefreshToken(obj: any) {
-        return jwt.sign(obj, refreshTokenSecret ?? "");
+    private users: Map<string, string> = new Map<string, string>();
+
+    constructor(
+        private readonly tokenService: TokenService,
+        private readonly userService: UserService,
+        private readonly sessionService: SessionService,
+    ) {
+        defaultUsers.forEach(u => this.users.set(u, this.userService.createUser(u)));
     }
 
-    public generateAccessToken(obj: any) {
-        return jwt.sign(obj, accessTokenSecret ?? "", { expiresIn: "15m" });
-    }
-
-    public verifyRefreshToken(token: string, cb: (err: any, decoded: any) => void) {
-        jwt.verify(token, refreshTokenSecret ?? "", cb);
-    }
-
-    public static authenticateToken(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const authHeader = req.headers["authorization"];
-        const token = authHeader?.split(" ")[1] as string;
-
-        if (!token) {
-            res.sendStatus(401);
-            return;
+    /**
+     * Try to log a user in.
+     *
+     * @param user user to log in
+     * @returns the access and refresh tokens for this session
+     */
+    public login(user: UserLoginDTO): MaybeError<TokenObject> {
+        // TODO lome: add actual authentication
+        const userId = this.users.get(user.username);
+        if (!userId) {
+            return [true];
         }
 
-        jwt.verify(token, accessTokenSecret ?? "", (err, user) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(403);
-                return;
-            }
-            (req as any).user = user;
-            next();
-        });
+        // create a new session for this user
+        // TODO lome: add spam protection
+        const sessionId = this.sessionService.createSession(userId);
+
+        // generate tokens for the newly created session
+        const accessToken = this.tokenService.generateAccessToken(sessionId);
+        const refreshToken = this.tokenService.generateRefreshToken(sessionId);
+
+        return [
+            null,
+            {
+                accessToken,
+                refreshToken,
+            },
+        ];
+    }
+
+    /**
+     * @deprecated
+     */
+    public async verifyRefreshToken(refreshToken: string): Promise<MaybeError<string>> {
+        // TODO lome: refactor this..."code".
+        const [err, user] = await this.tokenService.verifyRefreshToken(refreshToken);
+        if (err) {
+            return [err];
+        }
+
+        const accessToken = this.tokenService.generateAccessToken({ name: user.name });
+        return [null, accessToken];
     }
 }
