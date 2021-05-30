@@ -61,16 +61,17 @@ export class AuthService {
     }
 
     /**
-     * @deprecated
+     * Verify a provided refresh token and return a newly generated access token, if successful.
+     *
+     * @param refreshToken refresh token to verify
+     * @returns the new access token, or [err] if there is no session
      */
     public async verifyRefreshToken(refreshToken: string): Promise<MaybeError<string>> {
-        // TODO lome: refactor this..."code".
-        const [err, user] = await this.tokenService.verifyRefreshToken(refreshToken);
-        if (err) {
+        const [err, sessionId] = await this.tokenService.verifyRefreshToken(refreshToken);
+        if (err || !sessionId) {
             return [err];
         }
-
-        const accessToken = this.tokenService.generateAccessToken({ name: user.name });
+        const accessToken = this.tokenService.generateAccessToken(sessionId);
         return [null, accessToken];
     }
 }

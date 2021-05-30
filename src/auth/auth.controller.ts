@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 
 import { UserLoginDTOImpl, UserRegisterDTOImpl } from "@auth/types/user";
 import { AuthService } from "./auth.service";
+import { RefreshTokenDTO } from "@auth/types/token";
 
 /**
  * Controller for handling authentication.
@@ -30,19 +31,13 @@ export class AuthController {
     }
 
     @Post("token")
-    public async postRefreshToken(@Req() req: Request, @Res() res: Response) {
-        // TODO lome: refactor
-        const refreshToken = req.body.token as string;
+    public async postRefreshToken(@Req() _req: Request, @Res() res: Response, @Body() body: RefreshTokenDTO) {
+        const refreshToken = body.token as string;
         if (!refreshToken) {
             res.sendStatus(401);
             return;
         }
 
-        // TODO lome: store refresh tokens somewhere
-        // if (!refreshTokens.includes(refreshToken)) {
-        //     res.sendStatus(403);
-        //     return;
-        // }
         const [err, accessToken] = await this.authService.verifyRefreshToken(refreshToken);
         if (err) {
             res.sendStatus(403);
