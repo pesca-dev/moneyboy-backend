@@ -5,6 +5,8 @@ import { v4 as uuid } from "uuid";
 
 /**
  * Service for handling users of our application.
+ *
+ * @author Louis Meyer
  */
 @Injectable()
 export class UserService {

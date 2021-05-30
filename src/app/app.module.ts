@@ -9,6 +9,11 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TokenModule } from "@token/token.module";
 
+/**
+ * Main module for the entire app.
+ *
+ * @author Louis Meyer
+ */
 @Module({
     imports: [RouterModule.forRoutes(routes), AuthModule, TokenModule],
     controllers: [AppController],

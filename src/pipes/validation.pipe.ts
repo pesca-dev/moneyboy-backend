@@ -5,6 +5,8 @@ import { plainToClass } from "class-transformer";
 
 /**
  * Pipe for validating payloads.
+ *
+ * @author Louis Meyer
  */
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {

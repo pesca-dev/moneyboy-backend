@@ -43,6 +43,7 @@ export class TokenService {
                 if (err) {
                     res.sendStatus(401);
                 }
+                // TODO lome: what to do, if there is no session?
                 if (sessionId) {
                     const session = this.sessionService.getSession(sessionId as unknown as string);
                     req.session = session;
