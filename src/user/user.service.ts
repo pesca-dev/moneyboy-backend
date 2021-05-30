@@ -1,7 +1,8 @@
-import { IUser } from "@interfaces/user";
 import { Injectable } from "@nestjs/common";
-import { IUserImpl } from "user/types/user";
 import { v4 as uuid } from "uuid";
+
+import { IUser } from "@interfaces/user";
+import { IUserImpl } from "@user/types/user";
 
 /**
  * Service for handling users of our application.

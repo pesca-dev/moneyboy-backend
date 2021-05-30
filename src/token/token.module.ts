@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
+
 import { SessionModule } from "@session/session.module";
-import { TokenService } from "token/token.service";
+import { TokenService } from "./token.service";
 
 /**
  * Module for containing and managing auth tokens.

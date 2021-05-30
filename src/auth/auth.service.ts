@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { TokenService } from "token/token.service";
+
+import { TokenService } from "@token/token.service";
 import { UserLoginDTO } from "@interfaces/user";
 import { MaybeError } from "@interfaces/error";
 import { UserService } from "@user/user.service";

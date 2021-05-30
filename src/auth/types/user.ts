@@ -1,5 +1,6 @@
-import { UserLoginDTO, UserRegisterDTO } from "@interfaces/user";
 import { IsEmail, IsString } from "class-validator";
+
+import { UserLoginDTO, UserRegisterDTO } from "@interfaces/user";
 
 export class UserLoginDTOImpl implements UserLoginDTO {
     @IsString()

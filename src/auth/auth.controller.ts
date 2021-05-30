@@ -1,6 +1,7 @@
-import { UserLoginDTOImpl, UserRegisterDTOImpl } from "@auth/types/user";
 import { Body, Controller, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
+
+import { UserLoginDTOImpl, UserRegisterDTOImpl } from "@auth/types/user";
 import { AuthService } from "./auth.service";
 
 /**

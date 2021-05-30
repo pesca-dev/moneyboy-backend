@@ -4,7 +4,6 @@ import { RouterModule } from "nest-router";
 import { AuthModule } from "@auth/auth.module";
 import { TokenService } from "@token/token.service";
 import routes from "@config/routes";
-
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TokenModule } from "@token/token.module";

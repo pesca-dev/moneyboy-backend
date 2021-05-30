@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
+import $ from "logsen";
 
 import { ISession } from "@interfaces/session";
 import { ISessionImpl } from "@session/types/session";
-import $ from "logsen";
 
 /**
  * Service for managing current user sessions.
