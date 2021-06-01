@@ -1,3 +1,4 @@
+import { ISession } from "@interfaces/session";
 import { IUser } from "@interfaces/user";
 
 /**
@@ -7,9 +8,7 @@ declare module "express" {
     interface Request {
         /**
          * Current user.
-         *
-         * TODO lome: turn this into session.
          */
-        user?: IUser;
+        user?: ISession;
     }
 }

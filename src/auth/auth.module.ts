@@ -6,6 +6,7 @@ import variables from "@config/variables";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
+import { SessionModule } from "@session/session.module";
 import { UserModule } from "@user/user.module";
 
 /**
@@ -16,6 +17,7 @@ import { UserModule } from "@user/user.module";
 @Module({
     imports: [
         UserModule,
+        SessionModule,
         PassportModule,
         JwtModule.register({
             secret: variables.token.accessTokenSecret,
