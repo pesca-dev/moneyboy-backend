@@ -1,8 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
 
-import { IUser } from "@interfaces/user";
-import { IUserImpl } from "@user/types/user";
+// TODO lome: move this into higher directory
+export type User = {
+    id: string;
+    username: string;
+};
+
+const defaultUsers = [
+    { username: "louis", password: "1234" },
+    { username: "hendrik", password: "changeme" },
+];
 
 /**
  * Service for handling users of our application.
@@ -11,16 +19,34 @@ import { IUserImpl } from "@user/types/user";
  */
 @Injectable()
 export class UserService {
-    private users: Map<string, IUser> = new Map<string, IUser>();
+    private users: User[] = [];
 
-    public createUser(username: string) {
-        const uid = uuid();
-        const user = new IUserImpl(uid, username);
-        this.users.set(uid, user);
-        return uid;
+    constructor() {
+        defaultUsers.forEach(u => {
+            this.users.push({
+                ...u,
+                id: uuid(),
+            });
+        });
     }
 
-    public getUser(uid: string) {
-        return this.users.get(uid);
+    /**
+     * Find a user by its username.
+     */
+    public async findOne(username: string): Promise<User | undefined> {
+        return this.users.find(user => user.username === username);
+    }
+
+    /**
+     * Find a user by its id.
+     */
+    public async findOneById(id: string): Promise<User | undefined> {
+        const user = this.users.find(user => user.id === id);
+        if (user) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, ...result } = user as any;
+            return result;
+        }
+        return undefined;
     }
 }
