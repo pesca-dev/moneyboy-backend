@@ -1,7 +1,7 @@
 import { AuthController } from "@auth/auth.controller";
 import { AuthService } from "@auth/auth.service";
-import { JwtStrategy } from "@auth/strategy/jwt.strategy";
-import { LocalStrategy } from "@auth/strategy/local.strategy";
+import { JwtStrategy } from "@auth/strategies/jwt.strategy";
+import { LocalStrategy } from "@auth/strategies/local.strategy";
 import variables from "@config/variables";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
