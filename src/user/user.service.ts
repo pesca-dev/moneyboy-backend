@@ -2,7 +2,6 @@ import { IUser } from "@interfaces/user";
 import { IUserImpl } from "@models/iUserImpl";
 import { FactoryProvider } from "@nestjs/common";
 import { DatabaseService } from "@database/database.service";
-import { hashSync } from "bcrypt";
 import { v4 as uuid } from "uuid";
 
 interface CreateUserData {
@@ -24,7 +23,6 @@ export class UserService {
     public async createUser(userData: CreateUserData) {
         const data: IUser = {
             ...userData,
-            password: hashSync(userData.password, 10),
             id: uuid(),
         };
         const user = IUserImpl.fromData(data);

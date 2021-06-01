@@ -7,7 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { SessionService } from "@session/session.service";
 import { UserServiceKey } from "@user/user.service";
 import { UserService } from "@user/user.service";
-import { compareSync } from "bcrypt";
+import { compareSync, hashSync } from "bcrypt";
 
 export type ValidatedUserReturnType = {
     id: string;
@@ -34,7 +34,6 @@ export class AuthService {
      */
     public async validateUser(username: string, pass: string): Promise<ValidatedUserReturnType | null> {
         const user = await this.userService.findOne(username);
-        console.log(user);
         if (user && compareSync(pass, user.password)) {
             const { id } = user;
             return {
@@ -64,7 +63,10 @@ export class AuthService {
      */
     public async register(userData: UserRegisterDTO) {
         try {
-            await this.userService.createUser(userData);
+            await this.userService.createUser({
+                ...userData,
+                password: hashSync(userData.password, 10),
+            });
         } catch {
             throw new BadRequestException();
         }
