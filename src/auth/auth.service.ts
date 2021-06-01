@@ -1,10 +1,13 @@
 import variables from "@config/variables";
 import { ISession } from "@interfaces/session";
 import { JWTToken } from "@interfaces/tokens";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { UserRegisterDTO } from "@interfaces/user";
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SessionService } from "@session/session.service";
+import { UserServiceKey } from "@user/user.service";
 import { UserService } from "@user/user.service";
+import { compareSync } from "bcrypt";
 
 export type ValidatedUserReturnType = {
     id: string;
@@ -18,7 +21,7 @@ export type ValidatedUserReturnType = {
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly userService: UserService,
+        @Inject(UserServiceKey) private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly sessionService: SessionService,
     ) {}
@@ -31,7 +34,8 @@ export class AuthService {
      */
     public async validateUser(username: string, pass: string): Promise<ValidatedUserReturnType | null> {
         const user = await this.userService.findOne(username);
-        if (user && (user as any).password === pass) {
+        console.log(user);
+        if (user && compareSync(pass, user.password)) {
             const { id } = user;
             return {
                 id,
@@ -51,6 +55,19 @@ export class AuthService {
             access_token: this.signAccessToken(payload),
             refresh_token: this.signRefreshToken(payload),
         };
+    }
+
+    /**
+     * Register a new user to the system.
+     *
+     * @param userData userdata of the newly registered user.
+     */
+    public async register(userData: UserRegisterDTO) {
+        try {
+            await this.userService.createUser(userData);
+        } catch {
+            throw new BadRequestException();
+        }
     }
 
     /**

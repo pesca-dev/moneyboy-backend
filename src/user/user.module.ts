@@ -1,7 +1,8 @@
 import { Module } from "@nestjs/common";
 import { UserController } from "@user/user.controller";
+import { DatabaseModule } from "@database/database.module";
 
-import { UserService } from "./user.service";
+import { UserFactory, UserService, UserServiceKey } from "./user.service";
 
 /**
  * Module for managing users.
@@ -9,8 +10,9 @@ import { UserService } from "./user.service";
  * @author Louis Meyer
  */
 @Module({
-    exports: [UserService],
-    providers: [UserService],
+    exports: [UserServiceKey],
+    providers: [UserService, UserFactory],
     controllers: [UserController],
+    imports: [DatabaseModule],
 })
 export class UserModule {}

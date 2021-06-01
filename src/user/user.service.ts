@@ -1,52 +1,71 @@
-import { Injectable } from "@nestjs/common";
+import { IUser } from "@interfaces/user";
+import { IUserImpl } from "@models/iUserImpl";
+import { FactoryProvider } from "@nestjs/common";
+import { DatabaseService } from "@database/database.service";
+import { hashSync } from "bcrypt";
 import { v4 as uuid } from "uuid";
 
-// TODO lome: move this into higher directory
-export type User = {
-    id: string;
+interface CreateUserData {
     username: string;
-};
-
-const defaultUsers = [
-    { username: "louis", password: "1234" },
-    { username: "hendrik", password: "changeme" },
-];
+    password: string;
+    email: string;
+}
 
 /**
  * Service for handling users of our application.
+ * Inject it via `@Inject(UserServiceKey)`.
  *
  * @author Louis Meyer
  */
-@Injectable()
 export class UserService {
-    private users: User[] = [];
-
-    constructor() {
-        defaultUsers.forEach(u => {
-            this.users.push({
-                ...u,
-                id: uuid(),
-            });
-        });
+    /**
+     * Create a new user with provided data.
+     */
+    public async createUser(userData: CreateUserData) {
+        const data: IUser = {
+            ...userData,
+            password: hashSync(userData.password, 10),
+            id: uuid(),
+        };
+        const user = IUserImpl.fromData(data);
+        return user.save();
     }
 
     /**
      * Find a user by its username.
      */
-    public async findOne(username: string): Promise<User | undefined> {
-        return this.users.find(user => user.username === username);
+    public async findOne(username: string): Promise<IUser | undefined> {
+        return IUserImpl.findOne({
+            where: {
+                username,
+            },
+        });
     }
 
     /**
      * Find a user by its id.
      */
-    public async findOneById(id: string): Promise<User | undefined> {
-        const user = this.users.find(user => user.id === id);
-        if (user) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { password, ...result } = user as any;
-            return result;
-        }
-        return undefined;
+    public async findOneById(id: string): Promise<IUser | undefined> {
+        return IUserImpl.findOne({
+            where: {
+                id,
+            },
+        });
     }
 }
+
+/**
+ * Key for injecting the UserService.
+ */
+export const UserServiceKey = "INJECT_USER_SERVICE_KEY";
+
+/**
+ * Factory for creating the UserService.
+ */
+export const UserFactory: FactoryProvider = {
+    useFactory: async () => {
+        return new UserService();
+    },
+    provide: UserServiceKey,
+    inject: [DatabaseService],
+};

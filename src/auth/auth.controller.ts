@@ -4,6 +4,7 @@ import { LocalAuthGurad } from "@auth/guards/local-auth.guard";
 import { AuthService, ValidatedUserReturnType } from "@auth/auth.service";
 import { Public } from "@auth/guards/public.guard";
 import { RefreshTokenDTOImpl } from "@auth/types/refreshToken";
+import { UserRegisterDTOImpl } from "@auth/types/register";
 /**
  * Controller for handling authentication related routes.
  *
@@ -20,6 +21,13 @@ export class AuthController {
         // in this case, the req.user property is actually not of type ISession, but
         // just contains a field `id`, which holds the id of the already authenticated user.
         return this.authService.login(req.user as ValidatedUserReturnType);
+    }
+
+    @Public()
+    @Post("register")
+    public async postRegister(@Res() res: express.Response, @Body() userData: UserRegisterDTOImpl) {
+        await this.authService.register(userData);
+        res.sendStatus(HttpStatus.ACCEPTED);
     }
 
     @Public()

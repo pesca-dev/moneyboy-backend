@@ -47,9 +47,10 @@
             "@pipes/*": ["./pipes/*"],
             "@app/*": ["./app/*"],
             "@interfaces/*": ["./interfaces/*"],
-            "@token/*": ["./token/*"],
             "@user/*": ["./user/*"],
-            "@session/*": ["./session/*"]
+            "@session/*": ["./session/*"],
+            "@models/*": ["./models/*"],
+            "@database/*": ["./database/*"]
         } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
         // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
         // "typeRoots": [],                       /* List of folders to include type definitions from. */

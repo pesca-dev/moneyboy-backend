@@ -25,6 +25,20 @@ export interface UserLoginDTO {
  * @author Louis Meyer
  */
 export interface IUser {
+    /**
+     * ID of this user
+     */
     id: string;
+    /**
+     * Username of this user.
+     */
     username: string;
+    /**
+     * Password of this user.
+     */
+    password: string;
+    /**
+     * EMail address of this user.
+     */
+    email: string;
 }
