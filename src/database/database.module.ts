@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { DatabaseService } from "@database/database.service";
 import { createConnection } from "typeorm";
 import variables from "@config/variables";
+import { ISessionImpl } from "@models/iSessionImpl";
 
 /**
  * Module for handling database-related stuff.
@@ -22,7 +23,7 @@ import variables from "@config/variables";
                     username: variables.database.username,
                     password: variables.database.password,
                     database: variables.database.name,
-                    entities: [IUserImpl],
+                    entities: [IUserImpl, ISessionImpl],
                     synchronize: true,
                 });
                 return connection;

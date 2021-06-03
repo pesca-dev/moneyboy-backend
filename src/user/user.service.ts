@@ -20,7 +20,7 @@ export class UserService {
     /**
      * Create a new user with provided data.
      */
-    public async createUser(userData: CreateUserData) {
+    public async createUser(userData: CreateUserData): Promise<IUser> {
         const data: IUser = {
             ...userData,
             id: uuid(),

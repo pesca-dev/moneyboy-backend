@@ -47,7 +47,7 @@ export class AuthService {
      * Log a user in and return the access token for this user.
      */
     public async login(user: ValidatedUserReturnType) {
-        const sessionId = this.sessionService.createSession(user.id);
+        const sessionId = await this.sessionService.createSession(user.id);
         const payload: JWTToken = { sub: sessionId };
 
         return {
@@ -61,7 +61,7 @@ export class AuthService {
      *
      * @param userData userdata of the newly registered user.
      */
-    public async register(userData: UserRegisterDTO) {
+    public async register(userData: UserRegisterDTO): Promise<void> {
         try {
             await this.userService.createUser({
                 ...userData,
@@ -79,7 +79,7 @@ export class AuthService {
         if (!session) {
             throw new UnauthorizedException();
         }
-        this.sessionService.destroySession(session.id);
+        await this.sessionService.destroySession(session.id);
     }
 
     private signAccessToken(payload: JWTToken) {

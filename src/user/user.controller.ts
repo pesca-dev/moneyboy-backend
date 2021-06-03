@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Req } from "@nestjs/common";
+import { Controller, Get, Inject, Req, UnauthorizedException } from "@nestjs/common";
 import { UserService, UserServiceKey } from "@user/user.service";
 import { Request } from "express";
 
@@ -11,13 +11,13 @@ export class UserController {
 
     @Get("profile")
     public async getProfile(@Req() req: Request) {
-        const user = await this.userService.findOneById(req.user?.userId ?? "");
-        if (user) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { password, ...result } = user;
-            return result;
-        } else {
-            return null;
+        console.log(req.user);
+        const user = await this.userService.findOneById(req.user?.user?.id ?? "");
+        if (!user) {
+            throw new UnauthorizedException();
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...result } = user;
+        return result;
     }
 }
