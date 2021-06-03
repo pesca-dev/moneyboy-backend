@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+    moneyboy-server:
+        container_name: MONEYBOY_SERVER
+        build: ../
+        restart: always
+        ports:
+            - "13337:3000"
+        networks:
+            - moneyboy-network
+        environment:
+            - ACCESS_TOKEN_SECRET
+            - REFRESH_TOKEN_SECRET
+            - DB_HOST
+            - DB_PORT
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_DATABASE
+        depends_on:
+            - moneyboy-db
+
+    moneyboy-db:
+        container_name: moneyboy-db
+        image: "mysql"
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_ROOT_PASSWORD
+        networks:
+            - moneyboy-network
+        volumes:
+            - /var/lib/container-volumes/moneyboy/moneyboy-db:/var/lib/mysql
+
+networks:
+    moneyboy-network:
+        name: moneyboy-network

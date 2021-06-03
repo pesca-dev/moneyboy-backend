@@ -3,7 +3,7 @@ image: node:alpine
 stages:
     - prepare
     - build
-    # - deploy
+    - deploy
 
 node:install:
     stage: prepare
@@ -29,3 +29,19 @@ build:
     artifacts:
         paths:
             - build/
+
+docker:deploy:latest:
+    only:
+        - master
+    stage: deploy
+    image:
+        name: docker/compose:1.28.2
+        entrypoint: ["/bin/sh", "-c"]
+    script:
+        - docker-compose -f moneyboy-docker/docker-compose.yml build
+        - docker-compose -f moneyboy-docker/docker-compose.yml up -d
+    cache:
+        key: $CI_COMMIT_REF_SLUG
+        paths:
+            - node_modules/
+        policy: pull-push
