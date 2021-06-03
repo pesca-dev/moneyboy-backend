@@ -1,5 +1,5 @@
 /**
- * Interface for data send during registration of a new user.
+ * Data send during registration of a new user.
  *
  * @author Louis Meyer
  */
@@ -8,16 +8,6 @@ export interface UserRegisterDTO {
     displayName: string;
     password: string;
     email: string;
-}
-
-/**
- * Interface for data send during login of a user.
- *
- * @author Louis Meyer
- */
-export interface UserLoginDTO {
-    username: string;
-    password: string;
 }
 
 /**

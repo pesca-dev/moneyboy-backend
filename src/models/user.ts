@@ -2,10 +2,12 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
 import { IUser } from "@interfaces/user";
 
 /**
+ * Implementation of a user, which is coupled to a database schema.
+ *
  * @author Louis Meyer
  */
 @Entity()
-export class IUserImpl extends BaseEntity implements IUser {
+export class User extends BaseEntity implements IUser {
     @PrimaryColumn()
     public id!: string;
 
@@ -31,13 +33,9 @@ export class IUserImpl extends BaseEntity implements IUser {
     })
     public email!: string;
 
-    public static fromData(userData: IUser): IUserImpl {
-        const user = new IUserImpl();
-        user.id = userData.id;
-        user.username = userData.username;
-        user.displayName = userData.displayName;
-        user.email = userData.email;
-        user.password = userData.password;
+    public static fromData(data: IUser): User {
+        const user = new User();
+        Object.assign(user, data);
         return user;
     }
 }

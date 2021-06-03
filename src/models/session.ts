@@ -1,5 +1,5 @@
 import { ISession } from "@interfaces/session";
-import { IUserImpl } from "@models/iUserImpl";
+import { User } from "@models/user";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 
 /**
@@ -8,19 +8,19 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from
  * @author Louis Meyer
  */
 @Entity()
-export class ISessionImpl extends BaseEntity implements ISession {
+export class Session extends BaseEntity implements ISession {
     @PrimaryColumn()
     id!: string;
 
-    @ManyToOne(() => IUserImpl, user => user.id)
+    @ManyToOne(() => User, user => user.id)
     @JoinColumn()
-    user!: IUserImpl;
+    user!: User;
 
     @Column("bigint")
     createdAt!: number;
 
-    public static fromData(data: ISession): ISessionImpl {
-        const session = new ISessionImpl();
+    public static fromData(data: ISession): Session {
+        const session = new Session();
         Object.assign(session, data);
         return session;
     }

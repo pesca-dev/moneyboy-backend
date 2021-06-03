@@ -3,8 +3,9 @@ import { Body, Controller, Delete, HttpStatus, Post, Req, Res, UseGuards } from 
 import { LocalAuthGurad } from "@auth/guards/local-auth.guard";
 import { AuthService, ValidatedUserReturnType } from "@auth/auth.service";
 import { Public } from "@auth/guards/public.guard";
-import { RefreshTokenDTOImpl } from "@auth/types/refreshToken";
-import { UserRegisterDTOImpl } from "@auth/types/register";
+import { RefreshTokenDTOImpl } from "@auth/types/refreshTokenDTO.impl";
+import { UserRegisterDTOImpl } from "@auth/types/userRegisterDTO.impl";
+
 /**
  * Controller for handling authentication related routes.
  *

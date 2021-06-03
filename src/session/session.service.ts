@@ -2,8 +2,8 @@ import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
 
 import { UserService, UserServiceKey } from "@user/user.service";
-import { ISessionImpl } from "@models/iSessionImpl";
-import { IUserImpl } from "@models/iUserImpl";
+import { Session } from "@models/session";
+import { User } from "@models/user";
 import { ISession } from "@interfaces/session";
 
 /**
@@ -23,9 +23,9 @@ export class SessionService {
         if (!user) {
             throw new UnauthorizedException();
         }
-        const session = ISessionImpl.fromData({
+        const session = Session.fromData({
             id: uuid(),
-            user: user as IUserImpl,
+            user: user as User,
             createdAt: Date.now(),
         });
         await session.save();
@@ -36,7 +36,7 @@ export class SessionService {
      * Get a session with the provided id.
      */
     public async getSession(sessionId: string): Promise<ISession | undefined> {
-        return await ISessionImpl.findOne({
+        return await Session.findOne({
             where: {
                 id: sessionId,
             },
@@ -48,7 +48,7 @@ export class SessionService {
      * Delete a session with the provided id.
      */
     public async destroySession(sessionId: string): Promise<void> {
-        const session = await ISessionImpl.findOne({
+        const session = await Session.findOne({
             where: {
                 id: sessionId,
             },

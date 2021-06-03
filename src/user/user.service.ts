@@ -1,5 +1,5 @@
 import { IUser } from "@interfaces/user";
-import { IUserImpl } from "@models/iUserImpl";
+import { User } from "@models/user";
 import { BadRequestException, FactoryProvider, InternalServerErrorException } from "@nestjs/common";
 import { DatabaseService } from "@database/database.service";
 import { v4 as uuid } from "uuid";
@@ -23,7 +23,7 @@ export class UserService {
      */
     public async createUser(userData: CreateUserData): Promise<IUser> {
         if (
-            await IUserImpl.findOne({
+            await User.findOne({
                 where: {
                     username: userData.username,
                 },
@@ -35,7 +35,7 @@ export class UserService {
             ...userData,
             id: uuid(),
         };
-        const user = IUserImpl.fromData(data);
+        const user = User.fromData(data);
         try {
             return await user.save();
         } catch (e) {
@@ -47,7 +47,7 @@ export class UserService {
      * Find a user by its username.
      */
     public async findOne(username: string): Promise<IUser | undefined> {
-        return IUserImpl.findOne({
+        return User.findOne({
             where: {
                 username,
             },
@@ -58,7 +58,7 @@ export class UserService {
      * Find a user by its id.
      */
     public async findOneById(id: string): Promise<IUser | undefined> {
-        return IUserImpl.findOne({
+        return User.findOne({
             where: {
                 id,
             },
@@ -71,6 +71,7 @@ export class UserService {
  */
 export const UserServiceKey = "INJECT_USER_SERVICE_KEY";
 
+// TODO lome: do we need this?
 /**
  * Factory for creating the UserService.
  */
