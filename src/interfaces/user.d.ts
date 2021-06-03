@@ -5,6 +5,7 @@
  */
 export interface UserRegisterDTO {
     username: string;
+    displayName: string;
     password: string;
     email: string;
 }
@@ -33,6 +34,10 @@ export interface IUser {
      * Username of this user.
      */
     username: string;
+    /**
+     * display name of the user.
+     */
+    displayName: string;
     /**
      * Password of this user.
      */

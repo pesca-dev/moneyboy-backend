@@ -2,7 +2,7 @@ import variables from "@config/variables";
 import { ISession } from "@interfaces/session";
 import { JWTToken } from "@interfaces/tokens";
 import { UserRegisterDTO } from "@interfaces/user";
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SessionService } from "@session/session.service";
 import { UserServiceKey } from "@user/user.service";
@@ -62,14 +62,10 @@ export class AuthService {
      * @param userData userdata of the newly registered user.
      */
     public async register(userData: UserRegisterDTO): Promise<void> {
-        try {
-            await this.userService.createUser({
-                ...userData,
-                password: hashSync(userData.password, 10),
-            });
-        } catch {
-            throw new BadRequestException();
-        }
+        await this.userService.createUser({
+            ...userData,
+            password: hashSync(userData.password, 10),
+        });
     }
 
     /**

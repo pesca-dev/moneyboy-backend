@@ -1,11 +1,12 @@
 import { IUser } from "@interfaces/user";
 import { IUserImpl } from "@models/iUserImpl";
-import { FactoryProvider } from "@nestjs/common";
+import { BadRequestException, FactoryProvider, InternalServerErrorException } from "@nestjs/common";
 import { DatabaseService } from "@database/database.service";
 import { v4 as uuid } from "uuid";
 
 interface CreateUserData {
     username: string;
+    displayName: string;
     password: string;
     email: string;
 }
@@ -21,12 +22,25 @@ export class UserService {
      * Create a new user with provided data.
      */
     public async createUser(userData: CreateUserData): Promise<IUser> {
+        if (
+            await IUserImpl.findOne({
+                where: {
+                    username: userData.username,
+                },
+            })
+        ) {
+            throw new BadRequestException("Username already exists");
+        }
         const data: IUser = {
             ...userData,
             id: uuid(),
         };
         const user = IUserImpl.fromData(data);
-        return user.save();
+        try {
+            return await user.save();
+        } catch (e) {
+            throw new InternalServerErrorException();
+        }
     }
 
     /**

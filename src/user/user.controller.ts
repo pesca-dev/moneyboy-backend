@@ -11,7 +11,6 @@ export class UserController {
 
     @Get("profile")
     public async getProfile(@Req() req: Request) {
-        console.log(req.user);
         const user = await this.userService.findOneById(req.user?.user?.id ?? "");
         if (!user) {
             throw new UnauthorizedException();
