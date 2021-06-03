@@ -1,0 +1,101 @@
+image: node:alpine
+
+stages:
+    - prepare
+    - build
+    - deploy
+
+node:install:
+    stage: prepare
+    script:
+        - npm i
+    cache:
+        key: $CI_COMMIT_REF_SLUG
+        paths:
+            - node_modules/
+        policy: pull-push
+    artifacts:
+        paths:
+            - node_modules/
+
+build:
+    stage: build
+    script:
+        - npm run build
+    cache:
+        key: $CI_COMMIT_REF_SLUG
+        paths:
+            - node_modules/
+    artifacts:
+        paths:
+            - build/
+# image: golang:latest
+
+# stages:
+#     - test
+#     - build
+#     - pre-release
+#     - dev-release
+#     - release
+
+# variables:
+#     CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+#     CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+# test:
+#     stage: test
+#     script:
+#         - go test ./... -race
+
+# build:binaries:
+#     variables:
+#         PESCA_RELEASE: 1
+#     stage: build
+#     needs: ["test"]
+#     script:
+#         - bash ./scripts/build.sh
+#     artifacts:
+#         paths:
+#             - bin/*
+
+# build:production:
+#     stage: build
+#     needs: ["test"]
+#     script:
+#         - bash ./scripts/prod-build.sh
+#     artifacts:
+#         paths:
+#             - bin/*
+
+# docker:build:image:
+#     stage: pre-release
+#     needs: ["build:production"]
+#     image: docker:latest
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker build -t $CONTAINER_TEST_IMAGE .
+#         - docker push $CONTAINER_TEST_IMAGE
+
+# docker:deploy:latest:
+#     only:
+#         - master
+#     stage: dev-release
+#     needs: ["build:production"]
+#     image:
+#         name: docker/compose:1.28.2
+#         entrypoint: ["/bin/sh", "-c"]
+#     script:
+#         - docker-compose -f docker/docker-compose.yml build
+#         - docker-compose -f docker/docker-compose.yml up -d
+
+# docker:tag:latest:
+#     stage: release
+#     needs: ["docker:build:image"]
+#     image: docker:latest
+#     only:
+#         - master
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker pull $CONTAINER_TEST_IMAGE
+#         - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+#         - docker push $CONTAINER_RELEASE_IMAGE
