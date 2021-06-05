@@ -30,7 +30,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
             password: variables.database.password,
             database: variables.database.name,
             entities: [User, Session],
-            synchronize: true,
+            // synchronize: true,
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
