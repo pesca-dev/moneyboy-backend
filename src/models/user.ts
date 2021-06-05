@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 import { IUser } from "@interfaces/user";
 
 /**
@@ -7,7 +7,8 @@ import { IUser } from "@interfaces/user";
  * @author Louis Meyer
  */
 @Entity()
-export class User extends BaseEntity implements IUser {
+export class User implements IUser {
+    // TODO lome: maybe use @PrimaryGeneratedColumn("uuid")
     @PrimaryColumn()
     public id!: string;
 

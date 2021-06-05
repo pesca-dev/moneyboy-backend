@@ -1,5 +1,6 @@
-import { DatabaseModule } from "@database/database.module";
+import { Session } from "@models/session";
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { SessionService } from "@session/session.service";
 import { UserModule } from "@user/user.module";
 
@@ -11,6 +12,6 @@ import { UserModule } from "@user/user.module";
 @Module({
     providers: [SessionService],
     exports: [SessionService],
-    imports: [DatabaseModule, UserModule],
+    imports: [TypeOrmModule.forFeature([Session]), UserModule],
 })
 export class SessionModule {}

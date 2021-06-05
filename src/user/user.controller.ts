@@ -1,5 +1,5 @@
-import { Controller, Get, Inject, Req, UnauthorizedException } from "@nestjs/common";
-import { UserService, UserServiceKey } from "@user/user.service";
+import { Controller, Get, Req, UnauthorizedException } from "@nestjs/common";
+import { UserService } from "@user/user.service";
 import { Request } from "express";
 
 /**
@@ -7,7 +7,7 @@ import { Request } from "express";
  */
 @Controller()
 export class UserController {
-    constructor(@Inject(UserServiceKey) private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) {}
 
     @Get("profile")
     public async getProfile(@Req() req: Request) {

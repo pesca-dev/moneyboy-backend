@@ -1,10 +1,12 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
 
-import { UserService, UserServiceKey } from "@user/user.service";
+import { UserService } from "@user/user.service";
 import { Session } from "@models/session";
 import { User } from "@models/user";
 import { ISession } from "@interfaces/session";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 /**
  * Service for managing login sessions.
@@ -13,7 +15,10 @@ import { ISession } from "@interfaces/session";
  */
 @Injectable()
 export class SessionService {
-    constructor(@Inject(UserServiceKey) private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        @InjectRepository(Session) private readonly sessionRepository: Repository<Session>,
+    ) {}
 
     /**
      * Create a new sessions for a provided userid and return the id of the newly created session.
@@ -28,7 +33,7 @@ export class SessionService {
             user: user as User,
             createdAt: Date.now(),
         });
-        await session.save();
+        await this.sessionRepository.save(session);
         return session.id;
     }
 
@@ -36,7 +41,7 @@ export class SessionService {
      * Get a session with the provided id.
      */
     public async getSession(sessionId: string): Promise<ISession | undefined> {
-        return await Session.findOne({
+        return await this.sessionRepository.findOne({
             where: {
                 id: sessionId,
             },
@@ -48,13 +53,13 @@ export class SessionService {
      * Delete a session with the provided id.
      */
     public async destroySession(sessionId: string): Promise<void> {
-        const session = await Session.findOne({
+        const session = await this.sessionRepository.findOne({
             where: {
                 id: sessionId,
             },
         });
         if (session) {
-            await session.remove();
+            await this.sessionRepository.remove(session);
         }
     }
 }

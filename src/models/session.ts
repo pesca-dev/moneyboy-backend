@@ -1,6 +1,6 @@
 import { ISession } from "@interfaces/session";
 import { User } from "@models/user";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 
 /**
  * Implementation of a session, which is coupled to a database-schema.
@@ -8,7 +8,7 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from
  * @author Louis Meyer
  */
 @Entity()
-export class Session extends BaseEntity implements ISession {
+export class Session implements ISession {
     @PrimaryColumn()
     id!: string;
 

@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
-import { UserController } from "@user/user.controller";
-import { DatabaseModule } from "@database/database.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { UserFactory, UserService, UserServiceKey } from "./user.service";
+import { UserController } from "@user/user.controller";
+import { UserService } from "./user.service";
+import { User } from "@models/user";
 
 /**
  * Module for managing users.
@@ -10,9 +11,9 @@ import { UserFactory, UserService, UserServiceKey } from "./user.service";
  * @author Louis Meyer
  */
 @Module({
-    exports: [UserServiceKey],
-    providers: [UserService, UserFactory],
+    exports: [UserService],
+    providers: [UserService],
     controllers: [UserController],
-    imports: [DatabaseModule],
+    imports: [TypeOrmModule.forFeature([User])],
 })
 export class UserModule {}

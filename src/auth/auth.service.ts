@@ -2,10 +2,9 @@ import variables from "@config/variables";
 import { ISession } from "@interfaces/session";
 import { JWTToken } from "@interfaces/tokens";
 import { UserRegisterDTO } from "@interfaces/user";
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SessionService } from "@session/session.service";
-import { UserServiceKey } from "@user/user.service";
 import { UserService } from "@user/user.service";
 import { compareSync, hashSync } from "bcrypt";
 
@@ -21,7 +20,7 @@ export type ValidatedUserReturnType = {
 @Injectable()
 export class AuthService {
     constructor(
-        @Inject(UserServiceKey) private readonly userService: UserService,
+        private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly sessionService: SessionService,
     ) {}
