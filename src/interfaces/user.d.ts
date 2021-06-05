@@ -36,4 +36,9 @@ export interface IUser {
      * EMail address of this user.
      */
     email: string;
+
+    /**
+     * Flag for indicating, that a user verified their email.
+     */
+    emailVerified: boolean;
 }

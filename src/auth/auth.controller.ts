@@ -5,6 +5,7 @@ import { AuthService, ValidatedUserReturnType } from "@auth/auth.service";
 import { Public } from "@auth/guards/public.guard";
 import { RefreshTokenDTOImpl } from "@auth/types/refreshTokenDTO.impl";
 import { UserRegisterDTOImpl } from "@auth/types/userRegisterDTO.impl";
+import { Throttle } from "@nestjs/throttler";
 
 /**
  * Controller for handling authentication related routes.
@@ -17,6 +18,7 @@ export class AuthController {
 
     @Public()
     @UseGuards(LocalAuthGurad)
+    @Throttle()
     @Post("login")
     public async postLogin(@Req() req: express.Request) {
         // in this case, the req.user property is actually not of type ISession, but
@@ -33,6 +35,7 @@ export class AuthController {
 
     @Public()
     @Post("refresh")
+    @Throttle()
     public async postRefreshToken(@Body() body: RefreshTokenDTOImpl) {
         return this.authService.renewAccessToken(body.refresh_token);
     }

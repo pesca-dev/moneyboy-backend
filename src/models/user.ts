@@ -34,6 +34,11 @@ export class User implements IUser {
     })
     public email!: string;
 
+    @Column("boolean", {
+        default: false,
+    })
+    public emailVerified!: boolean;
+
     public static fromData(data: IUser): User {
         const user = new User();
         Object.assign(user, data);

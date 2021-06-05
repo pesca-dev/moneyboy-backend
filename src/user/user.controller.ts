@@ -1,6 +1,7 @@
-import { Controller, Get, Req, UnauthorizedException } from "@nestjs/common";
+import { Public } from "@auth/guards/public.guard";
+import { BadRequestException, Controller, Get, Req, Res, UnauthorizedException } from "@nestjs/common";
 import { UserService } from "@user/user.service";
-import { Request } from "express";
+import { Request, Response } from "express";
 
 /**
  * Controller for handling user-related endpoints.
@@ -18,5 +19,16 @@ export class UserController {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...result } = user;
         return result;
+    }
+
+    @Get("verify")
+    @Public()
+    public async verifyEmail(@Req() req: Request, @Res() res: Response) {
+        const token = req.query.t as string;
+        if (!token) {
+            throw new BadRequestException();
+        }
+        await this.userService.verifyUser(token);
+        res.send("Mail successfully verified!");
     }
 }

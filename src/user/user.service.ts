@@ -4,6 +4,9 @@ import { BadRequestException, Injectable, InternalServerErrorException } from "@
 import { v4 as uuid } from "uuid";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { MailerService } from "@nestjs-modules/mailer";
+import { JwtService } from "@nestjs/jwt";
+import variables from "@config/variables";
 
 interface CreateUserData {
     username: string;
@@ -20,9 +23,12 @@ interface CreateUserData {
  */
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+    constructor(
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        private readonly mailService: MailerService,
+        private readonly jwtService: JwtService,
+    ) {}
 
-    // TODO lome: https://medium.com/tales-of-libeo/typeorm-best-practices-using-typescript-and-nestjs-at-libeo-b02b7d1ed2eb
     /**
      * Create a new user with provided data.
      */
@@ -36,16 +42,57 @@ export class UserService {
         ) {
             throw new BadRequestException("Username already exists");
         }
-        const data: IUser = {
-            ...userData,
-            id: uuid(),
-        };
-        const user = User.fromData(data);
+        let user;
         try {
-            return await this.userRepository.save(user);
+            user = await this.userRepository.save(
+                User.fromData({
+                    ...userData,
+                    id: uuid(),
+                    emailVerified: false,
+                }),
+            );
         } catch (e) {
             throw new InternalServerErrorException();
         }
+
+        // try to send verification mail to user
+        const jwt = this.jwtService.sign(user.id, {
+            secret: variables.token.verifyTokenSecret,
+        });
+        const url = `${variables.host}/user/verify?t=${jwt}`;
+        try {
+            await this.mailService.sendMail({
+                to: user.email,
+                from: variables.mail.addr,
+                subject: "MoneyBoy Registration",
+                text: `Thank you for registering for MoneyBoy! To verify your account, please click the following link: ${url}`,
+            });
+        } catch {
+            // on failure, delete user from database
+            await this.userRepository.delete(user);
+            throw new InternalServerErrorException();
+        }
+
+        return user;
+    }
+
+    /**
+     * Change the verification status of a user to true.
+     * @param token token with encoded user id
+     */
+    public async verifyUser(token: string) {
+        let id = undefined;
+        try {
+            id = this.jwtService.verify(token, {
+                secret: variables.token.verifyTokenSecret,
+            });
+        } catch {}
+        const user = await this.findOneById(id);
+        if (!user || user.emailVerified) {
+            throw new BadRequestException();
+        }
+        user.emailVerified = true;
+        await this.userRepository.save(user);
     }
 
     /**

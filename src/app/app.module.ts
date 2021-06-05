@@ -12,6 +12,8 @@ import { UserModule } from "@user/user.module";
 import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 import { User } from "@models/user";
 import { Session } from "@models/session";
+import { ThrottlerModule } from "@nestjs/throttler";
+import { MailerModule } from "@nestjs-modules/mailer";
 
 /**
  * Main module for the entire app.
@@ -28,8 +30,17 @@ import { Session } from "@models/session";
             password: variables.database.password,
             database: variables.database.name,
             entities: [User, Session],
-            // autoLoadEntities: true,
-            synchronize: true,
+        }),
+        ThrottlerModule.forRoot({
+            ttl: 60,
+            limit: 10,
+        }),
+        MailerModule.forRoot({
+            transport: {
+                host: variables.mail.host,
+                port: variables.mail.port,
+                auth: variables.mail.auth,
+            },
         }),
         RouterModule.forRoutes(routes),
         AuthModule,
