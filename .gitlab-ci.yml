@@ -31,6 +31,15 @@ build:
         paths:
             - build/
 
+lint:
+    stage: test
+    script:
+        - npm run lint
+    cache:
+        key: $CI_COMMIT_REF_SLUG
+        paths:
+            - node_modules/
+
 test:
     stage: test
     script:
