@@ -3,6 +3,7 @@ image: node:alpine
 stages:
     - prepare
     - build
+    - test
     - deploy
 
 node:install:
@@ -29,6 +30,15 @@ build:
     artifacts:
         paths:
             - build/
+
+test:
+    stage: test
+    script:
+        - npm run test
+    cache:
+        key: $CI_COMMIT_REF_SLUG
+        paths:
+            - node_modules/
 
 docker:deploy:latest:
     only:
