@@ -34,7 +34,7 @@ build:
 test:
     stage: test
     script:
-        - npm run test
+        - npm run test:cov
     cache:
         key: $CI_COMMIT_REF_SLUG
         paths:
