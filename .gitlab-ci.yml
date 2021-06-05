@@ -32,7 +32,7 @@ build:
 
 docker:deploy:latest:
     only:
-        - main
+        - prod
     stage: deploy
     image:
         name: docker/compose:1.28.2
