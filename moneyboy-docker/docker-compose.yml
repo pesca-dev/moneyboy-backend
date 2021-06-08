@@ -12,11 +12,18 @@ services:
         environment:
             - ACCESS_TOKEN_SECRET
             - REFRESH_TOKEN_SECRET
+            - VERIFY_TOKEN_SECRET
+            - HOST
             - DB_HOST
             - DB_PORT
             - MYSQL_USER
             - MYSQL_PASSWORD
             - MYSQL_DATABASE
+            - SMTP_ADDR
+            - SMTP_HOST
+            - SMTP_PASS
+            - SMTP_PORT
+            - SMTP_USER
         depends_on:
             - moneyboy-db
 
