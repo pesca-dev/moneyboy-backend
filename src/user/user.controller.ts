@@ -11,15 +11,17 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get("/all")
-    public async getUsers() {
+    public async getUsers(@Req() req: Request) {
         const users = await this.userService.getAll();
-        return users.map(({ id, username, displayName }) => {
-            return {
-                id,
-                username,
-                displayName,
-            };
-        });
+        return users
+            .filter(v => v.id !== req.user?.user?.id)
+            .map(({ id, username, displayName }) => {
+                return {
+                    id,
+                    username,
+                    displayName,
+                };
+            });
     }
 
     @Get("profile")
