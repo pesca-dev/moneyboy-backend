@@ -1,12 +1,12 @@
+import variables from "@config/variables";
 import { IUser } from "@interfaces/user";
 import { User } from "@models/user";
+import { MailerService } from "@nestjs-modules/mailer";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { v4 as uuid } from "uuid";
+import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { MailerService } from "@nestjs-modules/mailer";
-import { JwtService } from "@nestjs/jwt";
-import variables from "@config/variables";
+import { v4 as uuid } from "uuid";
 
 interface CreateUserData {
     username: string;
@@ -28,6 +28,15 @@ export class UserService {
         private readonly mailService: MailerService,
         private readonly jwtService: JwtService,
     ) {}
+
+    public async getAll(): Promise<IUser[]> {
+        const users = await this.userRepository.find({
+            where: {
+                emailVerified: true,
+            },
+        });
+        return users;
+    }
 
     /**
      * Create a new user with provided data.

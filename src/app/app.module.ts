@@ -1,19 +1,18 @@
-import { Module } from "@nestjs/common";
-import { RouterModule } from "nest-router";
-import { APP_GUARD } from "@nestjs/core";
-import { TypeOrmModule } from "@nestjs/typeorm";
-
+import { AuthModule } from "@auth/auth.module";
+import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 import routes from "@config/routes";
 import variables from "@config/variables";
+import { Session } from "@models/session";
+import { User } from "@models/user";
+import { MailerModule } from "@nestjs-modules/mailer";
+import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { ThrottlerModule } from "@nestjs/throttler";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { UserModule } from "@user/user.module";
+import { RouterModule } from "nest-router";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { AuthModule } from "@auth/auth.module";
-import { UserModule } from "@user/user.module";
-import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
-import { User } from "@models/user";
-import { Session } from "@models/session";
-import { ThrottlerModule } from "@nestjs/throttler";
-import { MailerModule } from "@nestjs-modules/mailer";
 
 /**
  * Main module for the entire app.

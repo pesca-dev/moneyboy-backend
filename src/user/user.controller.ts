@@ -10,6 +10,18 @@ import { Request, Response } from "express";
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @Get("/all")
+    public async getUsers() {
+        const users = await this.userService.getAll();
+        return users.map(({ id, username, displayName }) => {
+            return {
+                id,
+                username,
+                displayName,
+            };
+        });
+    }
+
     @Get("profile")
     public async getProfile(@Req() req: Request) {
         const user = await this.userService.findOneById(req.user?.user?.id ?? "");
