@@ -2,11 +2,12 @@ import { AuthModule } from "@auth/auth.module";
 import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 import routes from "@config/routes";
 import variables from "@config/variables";
+import { MailModule } from "@mail/mail.module";
 import { Session } from "@models/session";
 import { User } from "@models/user";
-import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "@user/user.module";
@@ -21,6 +22,7 @@ import { AppService } from "./app.service";
  */
 @Module({
     imports: [
+        EventEmitterModule.forRoot(),
         TypeOrmModule.forRoot({
             type: "mysql",
             host: variables.database.host,
@@ -35,13 +37,7 @@ import { AppService } from "./app.service";
             ttl: 60,
             limit: 10,
         }),
-        MailerModule.forRoot({
-            transport: {
-                host: variables.mail.host,
-                port: variables.mail.port,
-                auth: variables.mail.auth,
-            },
-        }),
+        MailModule,
         RouterModule.forRoutes(routes),
         AuthModule,
         UserModule,

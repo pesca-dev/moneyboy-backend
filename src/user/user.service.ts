@@ -1,7 +1,7 @@
 import variables from "@config/variables";
+import { EventService } from "@events/event.service";
 import { IUser } from "@interfaces/user";
 import { User } from "@models/user";
-import { MailerService } from "@nestjs-modules/mailer";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -25,7 +25,7 @@ interface CreateUserData {
 export class UserService {
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private readonly mailService: MailerService,
+        private readonly eventService: EventService,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -69,19 +69,10 @@ export class UserService {
             secret: variables.token.verifyTokenSecret,
         });
         const url = `${variables.host}/user/verify?t=${jwt}`;
-        try {
-            await this.mailService.sendMail({
-                to: user.email,
-                from: variables.mail.addr,
-                subject: "MoneyBoy Registration",
-                text: `Thank you for registering for MoneyBoy! To verify your account, please click the following link: ${url}`,
-            });
-        } catch {
-            // on failure, delete user from database
-            await this.userRepository.delete(user);
-            throw new InternalServerErrorException();
-        }
-
+        this.eventService.emit("user.created", {
+            url,
+            email: user.email,
+        });
         return user;
     }
 
