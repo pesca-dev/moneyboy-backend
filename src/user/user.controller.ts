@@ -1,5 +1,15 @@
 import { Public } from "@auth/guards/public.guard";
-import { BadRequestException, Controller, Get, Req, Res, UnauthorizedException } from "@nestjs/common";
+import {
+    BadRequestException,
+    ClassSerializerInterceptor,
+    Controller,
+    Get,
+    Req,
+    Res,
+    SerializeOptions,
+    UnauthorizedException,
+    UseInterceptors,
+} from "@nestjs/common";
 import { UserService } from "@user/user.service";
 import { Request, Response } from "express";
 
@@ -10,29 +20,24 @@ import { Request, Response } from "express";
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get("/all")
     public async getUsers(@Req() req: Request) {
         const users = await this.userService.getAll();
-        return users
-            .filter(v => v.id !== req.user?.user?.id)
-            .map(({ id, username, displayName }) => {
-                return {
-                    id,
-                    username,
-                    displayName,
-                };
-            });
+        return users.filter(v => v.id !== req.user?.user?.id);
     }
 
+    @SerializeOptions({
+        groups: ["self"],
+    })
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get("profile")
     public async getProfile(@Req() req: Request) {
         const user = await this.userService.findOneById(req.user?.user?.id ?? "");
         if (!user) {
             throw new UnauthorizedException();
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...result } = user;
-        return result;
+        return user;
     }
 
     @Get("verify")
