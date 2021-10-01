@@ -39,29 +39,36 @@ export class UserService {
     }
 
     /**
-     * Create a new user with provided data.
+     * Create a new user with provided data. If user already exists, resend registration mail.
      */
     public async createUser(userData: CreateUserData): Promise<IUser> {
-        if (
-            await this.userRepository.findOne({
-                where: {
-                    username: userData.username,
-                },
-            })
-        ) {
-            throw new BadRequestException("Username already exists");
-        }
-        let user;
-        try {
-            user = await this.userRepository.save(
-                User.fromData({
-                    ...userData,
-                    id: uuid(),
-                    emailVerified: false,
-                }),
-            );
-        } catch (e) {
-            throw new InternalServerErrorException();
+        // check if user already exists
+        let user = await this.userRepository.findOne({
+            where: {
+                username: userData.username,
+            },
+        });
+
+        // if user exists
+        if (user) {
+            // AND (is verified OR the provided email equals the stored one)
+            // return BadRequest
+            if (user.emailVerified || user.email !== userData.email) {
+                throw new BadRequestException("Username already exists");
+            }
+        } else {
+            // else try to save the user
+            try {
+                user = await this.userRepository.save(
+                    User.fromData({
+                        ...userData,
+                        id: uuid(),
+                        emailVerified: false,
+                    }),
+                );
+            } catch (e) {
+                throw new InternalServerErrorException();
+            }
         }
 
         // try to send verification mail to user
