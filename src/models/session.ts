@@ -1,3 +1,4 @@
+import { Restricted } from "@global";
 import { ISession } from "@interfaces/session";
 import { User } from "@models/user";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
@@ -19,7 +20,7 @@ export class Session implements ISession {
     @Column("bigint")
     createdAt!: number;
 
-    public static fromData(data: ISession): Session {
+    public static fromData(data: Restricted<ISession>): Session {
         const session = new Session();
         Object.assign(session, data);
         return session;

@@ -3,6 +3,7 @@ import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 import routes from "@config/routes";
 import variables from "@config/variables";
 import { MailModule } from "@mail/mail.module";
+import { Payment } from "@models/payment";
 import { Session } from "@models/session";
 import { User } from "@models/user";
 import { Module } from "@nestjs/common";
@@ -10,6 +11,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { PaymentModule } from "@payment/payment.module";
 import { UserModule } from "@user/user.module";
 import { RouterModule } from "nest-router";
 import { AppController } from "./app.controller";
@@ -30,8 +32,8 @@ import { AppService } from "./app.service";
             username: variables.database.username,
             password: variables.database.password,
             database: variables.database.name,
-            entities: [User, Session],
-            // synchronize: true,
+            entities: [User, Session, Payment],
+            synchronize: true,
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
@@ -41,6 +43,7 @@ import { AppService } from "./app.service";
         RouterModule.forRoutes(routes),
         AuthModule,
         UserModule,
+        PaymentModule,
     ],
     controllers: [AppController],
     providers: [
