@@ -1,12 +1,11 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { v4 as uuid } from "uuid";
-
-import { UserService } from "@user/user.service";
+import { ISession } from "@interfaces/session";
 import { Session } from "@models/session";
 import { User } from "@models/user";
-import { ISession } from "@interfaces/session";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { UserService } from "@user/user.service";
 import { Repository } from "typeorm";
+import { v4 as uuid } from "uuid";
 
 /**
  * Service for managing login sessions.

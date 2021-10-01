@@ -1,7 +1,7 @@
 import { PaymentDTO } from "@interfaces/payment";
 import { IUser } from "@interfaces/user";
 import { Payment } from "@models/payment";
-import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserService } from "@user/user.service";
 import { Repository } from "typeorm";
@@ -27,10 +27,21 @@ export class PaymentService {
         payment.date = date;
         payment.amount = amount;
 
-        try {
-            await this.paymentRepository.save(payment);
-        } catch {
-            throw new InternalServerErrorException();
+        await this.paymentRepository.save(payment);
+    }
+
+    public async getById(user: IUser, id: string) {
+        const payment = await this.paymentRepository.findOne({
+            where: {
+                id: id,
+            },
+            relations: ["to", "from"],
+        });
+
+        if (!payment || (payment.from.id !== user.id && payment.to.id !== user.id)) {
+            throw new UnauthorizedException();
         }
+
+        return payment;
     }
 }
