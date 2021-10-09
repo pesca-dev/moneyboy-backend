@@ -15,7 +15,7 @@ export class PaymentService {
     ) {}
 
     public async createPayment(from: IUser, { to, date, amount }: PaymentDTO) {
-        const target = await this.userService.findOneById(to);
+        const target = await this.userService.findById(to);
         if (!target) {
             throw new BadRequestException("Target user does not exist.");
         }

@@ -32,7 +32,7 @@ export class AuthService {
      * @param pass password to validate
      */
     public async validateUser(username: string, pass: string): Promise<ValidatedUserReturnType | null> {
-        const user = await this.userService.findOneByName(username);
+        const user = await this.userService.findByName(username);
         if (user && compareSync(pass, user.password) && user.emailVerified) {
             const { id } = user;
             return {

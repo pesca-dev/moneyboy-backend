@@ -27,7 +27,7 @@ export class SessionService {
      * Create a new sessions for a provided userid and return the id of the newly created session.
      */
     public async createSession(userId: string): Promise<string> {
-        const user = await this.userService.findOneById(userId);
+        const user = await this.userService.findById(userId);
         if (!user) {
             throw new UnauthorizedException();
         }

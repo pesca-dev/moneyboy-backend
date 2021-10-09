@@ -41,7 +41,7 @@ export class UserService {
     /**
      * Find a user by its username.
      */
-    public async findOneByName(username: string): Promise<IUser | undefined> {
+    public async findByName(username: string): Promise<IUser | undefined> {
         return this.userRepository.findOne({
             where: {
                 username,
@@ -52,7 +52,7 @@ export class UserService {
     /**
      * Find a user by its id.
      */
-    public async findOneById(id: string): Promise<IUser | undefined> {
+    public async findById(id: string): Promise<IUser | undefined> {
         return this.userRepository.findOne({
             where: {
                 id,
@@ -125,7 +125,7 @@ export class UserService {
                 secret: variables.token.verifyTokenSecret,
             });
         } catch {}
-        const user = await this.findOneById(id);
+        const user = await this.findById(id);
         if (!user || user.emailVerified) {
             throw new BadRequestException();
         }

@@ -34,7 +34,7 @@ export class UserController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("/profile")
     public async getProfile(@Req() req: Request) {
-        const user = await this.userService.findOneById(req.user?.user?.id ?? "");
+        const user = await this.userService.findById(req.user?.user?.id ?? "");
         if (!user) {
             throw new UnauthorizedException();
         }
@@ -55,7 +55,7 @@ export class UserController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("/:id")
     public async getUserById(@Param("id") id: string) {
-        const user = await this.userService.findOneById(id);
+        const user = await this.userService.findById(id);
         if (!user) {
             throw new BadRequestException();
         }
