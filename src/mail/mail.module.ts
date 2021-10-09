@@ -1,4 +1,5 @@
 import variables from "@config/variables";
+import { EventModule } from "@events/event.module";
 import { MailService } from "@mail/mail.service";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
@@ -17,6 +18,7 @@ import { Module } from "@nestjs/common";
                 auth: variables.mail.auth,
             },
         }),
+        EventModule,
     ],
     providers: [MailService],
     exports: [MailService],

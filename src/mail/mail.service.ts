@@ -1,5 +1,5 @@
 import variables from "@config/variables";
-import { EVENTS, On } from "@events/event.service";
+import { EVENTS, EventService, On } from "@events/event.service";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 
@@ -12,10 +12,10 @@ import { Injectable, Logger } from "@nestjs/common";
 export class MailService {
     private readonly logger = new Logger(MailService.name);
 
-    constructor(private readonly mailService: MailerService) {}
+    constructor(private readonly mailService: MailerService, private readonly eventer: EventService) {}
 
     @On("user.created")
-    public async sendRegistrationMail({ url, email }: EVENTS["user.created"]) {
+    public async sendRegistrationMail({ url, email, id }: EVENTS["user.created"]) {
         try {
             this.logger.log(`Trying to send registration mail to '${email}'.`);
             await this.mailService.sendMail({
@@ -25,6 +25,7 @@ export class MailService {
                 text: `Thank you for registering for MoneyBoy! To verify your account, please click the following link: ${url}`,
             });
         } catch (e) {
+            this.eventer.emit("registration.mail.send.error", { id });
             this.logger.log(`Error sending registration mail: ${e}`);
         }
     }

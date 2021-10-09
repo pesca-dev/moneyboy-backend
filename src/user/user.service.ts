@@ -1,5 +1,4 @@
 import variables from "@config/variables";
-import { EventService } from "@events/event.service";
 import { IUser } from "@interfaces/user";
 import { User } from "@models/user";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
@@ -25,7 +24,6 @@ interface CreateUserData {
 export class UserService {
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private readonly eventService: EventService,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -61,48 +59,20 @@ export class UserService {
     }
 
     /**
-     * Create a new user with provided data. If user already exists, resend registration mail.
+     * Tries to create a new user. If user already exists, updates it.
      */
     public async createUser(userData: CreateUserData): Promise<IUser> {
-        // check if user already exists
-        let user = await this.userRepository.findOne({
-            where: {
-                username: userData.username,
-            },
-        });
-
-        // if user exists
-        if (user) {
-            // AND (is verified OR the provided email equals the stored one)
-            // return BadRequest
-            if (user.emailVerified || user.email !== userData.email) {
-                throw new BadRequestException("Username already exists");
-            }
-        } else {
-            // else try to save the user
-            try {
-                user = await this.userRepository.save(
-                    User.fromData({
-                        ...userData,
-                        id: uuid(),
-                        emailVerified: false,
-                    }),
-                );
-            } catch (e) {
-                throw new InternalServerErrorException();
-            }
+        try {
+            return this.userRepository.save(
+                User.fromData({
+                    ...userData,
+                    id: uuid(),
+                    emailVerified: false,
+                }),
+            );
+        } catch (e) {
+            throw new InternalServerErrorException("Error during saving of user");
         }
-
-        // try to send verification mail to user
-        const jwt = this.jwtService.sign(user.id, {
-            secret: variables.token.verifyTokenSecret,
-        });
-        const url = `${variables.host}/user/verify?t=${jwt}`;
-        this.eventService.emit("user.created", {
-            url,
-            email: user.email,
-        });
-        return user;
     }
 
     public async updateUser(user: IUser) {
@@ -112,6 +82,12 @@ export class UserService {
             },
             user,
         );
+    }
+
+    public async deleteUser(id: string) {
+        await this.userRepository.delete({
+            id,
+        });
     }
 
     /**

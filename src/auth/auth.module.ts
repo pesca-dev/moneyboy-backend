@@ -3,6 +3,7 @@ import { AuthService } from "@auth/auth.service";
 import { JwtStrategy } from "@auth/strategies/jwt.strategy";
 import { LocalStrategy } from "@auth/strategies/local.strategy";
 import variables from "@config/variables";
+import { EventModule } from "@events/event.module";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
@@ -21,10 +22,8 @@ import { UserModule } from "@user/user.module";
         PassportModule,
         JwtModule.register({
             secret: variables.token.accessTokenSecret,
-            signOptions: {
-                expiresIn: "15m",
-            },
         }),
+        EventModule,
     ],
     providers: [AuthService, LocalStrategy, JwtStrategy],
     controllers: [AuthController],

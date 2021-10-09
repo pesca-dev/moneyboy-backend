@@ -1,4 +1,3 @@
-import { EventModule } from "@events/event.module";
 import { User } from "@models/user";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
@@ -15,6 +14,6 @@ import { UserService } from "./user.service";
     exports: [UserService],
     providers: [UserService],
     controllers: [UserController],
-    imports: [TypeOrmModule.forFeature([User]), JwtModule.register({}), EventModule],
+    imports: [TypeOrmModule.forFeature([User]), JwtModule.register({})],
 })
 export class UserModule {}

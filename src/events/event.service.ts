@@ -11,6 +11,10 @@ export type EVENTS = {
      */
     "user.created": {
         /**
+         * Id if the user.
+         */
+        id: string;
+        /**
          * Url for the registration link.
          */
         url: string;
@@ -18,6 +22,9 @@ export type EVENTS = {
          * Mail of the user.
          */
         email: string;
+    };
+    "registration.mail.send.error": {
+        id: string;
     };
 };
 

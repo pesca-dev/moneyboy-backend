@@ -36,7 +36,8 @@ export class User implements IUser {
     })
     @Column("varchar", {
         length: 255,
-        unique: true,
+        // TODO lome: Shall mail be "unique"?
+        // unique: true,
     })
     public email!: string;
 
