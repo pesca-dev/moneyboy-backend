@@ -1,5 +1,4 @@
 import variables from "@config/variables";
-import { ISession } from "@interfaces/session";
 import { JWTToken } from "@interfaces/tokens";
 import { UserRegisterDTO } from "@interfaces/user";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
@@ -7,6 +6,7 @@ import { JwtService } from "@nestjs/jwt";
 import { SessionService } from "@session/session.service";
 import { UserService } from "@user/user.service";
 import { compareSync, hashSync } from "bcrypt";
+import { RequestUser } from "express";
 
 export type ValidatedUserReturnType = {
     id: string;
@@ -70,11 +70,11 @@ export class AuthService {
     /**
      * Logout of a provided session. This automatically invalidates all tokens connected with this session.
      */
-    public async logout(session?: ISession) {
-        if (!session) {
+    public async logout(user?: RequestUser) {
+        if (!user) {
             throw new UnauthorizedException();
         }
-        await this.sessionService.destroySession(session.id);
+        await this.sessionService.destroySession(user.session.id);
     }
 
     private signAccessToken(payload: JWTToken) {

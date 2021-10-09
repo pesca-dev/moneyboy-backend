@@ -17,31 +17,31 @@ import { Request, Response } from "express";
 /**
  * Controller for handling user-related endpoints.
  */
-@Controller("/user")
+@Controller("users")
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get("/")
-    public async getAllUsers(@Req() req: Request) {
+    @Get("")
+    public async getAllUsers() {
         const users = await this.userService.findAll();
-        return users.filter(v => v.id !== req.user?.user?.id);
+        return users;
     }
 
     @SerializeOptions({
         groups: ["self"],
     })
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get("/profile")
+    @Get("profile")
     public async getProfile(@Req() req: Request) {
-        const user = await this.userService.findById(req.user?.user?.id ?? "");
+        const user = await this.userService.findById(req.user?.id ?? "");
         if (!user) {
             throw new UnauthorizedException();
         }
         return user;
     }
 
-    @Get("/verify")
+    @Get("verify")
     @Public()
     public async verifyEmail(@Req() req: Request, @Res() res: Response) {
         const token = req.query.t as string;
@@ -53,7 +53,7 @@ export class UserController {
     }
 
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get("/:id")
+    @Get(":id")
     public async getUserById(@Param("id") id: string) {
         const user = await this.userService.findById(id);
         if (!user) {
