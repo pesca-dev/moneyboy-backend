@@ -19,6 +19,10 @@ export class SessionService {
         @InjectRepository(Session) private readonly sessionRepository: Repository<Session>,
     ) {}
 
+    public async getAll(): Promise<ISession[] | undefined> {
+        return await this.sessionRepository.find();
+    }
+
     /**
      * Create a new sessions for a provided userid and return the id of the newly created session.
      */

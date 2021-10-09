@@ -14,7 +14,7 @@ export class PaymentService {
         @InjectRepository(Payment) private readonly paymentRepository: Repository<Payment>,
     ) {}
 
-    public async addPayment(from: IUser, { to, date, amount }: PaymentDTO) {
+    public async createPayment(from: IUser, { to, date, amount }: PaymentDTO) {
         const target = await this.userService.findOneById(to);
         if (!target) {
             throw new BadRequestException("Target user does not exist.");

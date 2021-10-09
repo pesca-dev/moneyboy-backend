@@ -10,7 +10,7 @@ export class PaymentController {
 
     @Post("add")
     public async postAdd(@Req() req: Request, @Body() payment: PaymentDTOImpl) {
-        return this.paymentService.addPayment(req.user?.user as IUser, payment);
+        return this.paymentService.createPayment(req.user?.user as IUser, payment);
     }
 
     @Get(":id")

@@ -31,6 +31,11 @@ export class EventService {
     private readonly logger = new Logger(EventService.name);
     constructor(private eventEmitter: EventEmitter2) {}
 
+    /**
+     * Emit an event on the server.
+     * @param event name of the event
+     * @param payload payload of the event
+     */
     public emit<K extends keyof EVENTS>(event: K, payload: EVENTS[K]) {
         this.logger.log(`Emitting '${event}'`);
         this.eventEmitter.emit(event, payload);

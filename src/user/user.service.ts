@@ -29,13 +29,35 @@ export class UserService {
         private readonly jwtService: JwtService,
     ) {}
 
-    public async getAll(): Promise<IUser[]> {
+    public async findAll(): Promise<IUser[]> {
         const users = await this.userRepository.find({
             where: {
                 emailVerified: true,
             },
         });
         return users;
+    }
+
+    /**
+     * Find a user by its username.
+     */
+    public async findOneByName(username: string): Promise<IUser | undefined> {
+        return this.userRepository.findOne({
+            where: {
+                username,
+            },
+        });
+    }
+
+    /**
+     * Find a user by its id.
+     */
+    public async findOneById(id: string): Promise<IUser | undefined> {
+        return this.userRepository.findOne({
+            where: {
+                id,
+            },
+        });
     }
 
     /**
@@ -83,6 +105,15 @@ export class UserService {
         return user;
     }
 
+    public async updateUser(user: IUser) {
+        await this.userRepository.update(
+            {
+                id: user.id,
+            },
+            user,
+        );
+    }
+
     /**
      * Change the verification status of a user to true.
      * @param token token with encoded user id
@@ -100,27 +131,5 @@ export class UserService {
         }
         user.emailVerified = true;
         await this.userRepository.save(user);
-    }
-
-    /**
-     * Find a user by its username.
-     */
-    public async findOne(username: string): Promise<IUser | undefined> {
-        return this.userRepository.findOne({
-            where: {
-                username,
-            },
-        });
-    }
-
-    /**
-     * Find a user by its id.
-     */
-    public async findOneById(id: string): Promise<IUser | undefined> {
-        return this.userRepository.findOne({
-            where: {
-                id,
-            },
-        });
     }
 }

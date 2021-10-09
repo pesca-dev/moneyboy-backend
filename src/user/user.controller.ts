@@ -4,6 +4,7 @@ import {
     ClassSerializerInterceptor,
     Controller,
     Get,
+    Param,
     Req,
     Res,
     SerializeOptions,
@@ -21,9 +22,9 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get("/all")
-    public async getUsers(@Req() req: Request) {
-        const users = await this.userService.getAll();
+    @Get("/")
+    public async getAllUsers(@Req() req: Request) {
+        const users = await this.userService.findAll();
         return users.filter(v => v.id !== req.user?.user?.id);
     }
 
@@ -31,7 +32,7 @@ export class UserController {
         groups: ["self"],
     })
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get("profile")
+    @Get("/profile")
     public async getProfile(@Req() req: Request) {
         const user = await this.userService.findOneById(req.user?.user?.id ?? "");
         if (!user) {
@@ -40,7 +41,7 @@ export class UserController {
         return user;
     }
 
-    @Get("verify")
+    @Get("/verify")
     @Public()
     public async verifyEmail(@Req() req: Request, @Res() res: Response) {
         const token = req.query.t as string;
@@ -49,5 +50,15 @@ export class UserController {
         }
         await this.userService.verifyUser(token);
         res.send("Mail successfully verified!");
+    }
+
+    @UseInterceptors(ClassSerializerInterceptor)
+    @Get("/:id")
+    public async getUserById(@Param("id") id: string) {
+        const user = await this.userService.findOneById(id);
+        if (!user) {
+            throw new BadRequestException();
+        }
+        return user;
     }
 }
