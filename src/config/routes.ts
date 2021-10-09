@@ -8,15 +8,15 @@ import { Routes } from "nest-router";
  */
 const routes: Routes = [
     {
-        path: "/auth",
+        path: "",
         module: AuthModule,
     },
     {
-        path: "/user",
+        path: "",
         module: UserModule,
     },
     {
-        path: "/payment",
+        path: "",
         module: PaymentModule,
     },
 ];

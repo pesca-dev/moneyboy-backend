@@ -17,7 +17,7 @@ import { Request, Response } from "express";
 /**
  * Controller for handling user-related endpoints.
  */
-@Controller()
+@Controller("/user")
 export class UserController {
     constructor(private readonly userService: UserService) {}
 

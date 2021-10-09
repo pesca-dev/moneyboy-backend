@@ -14,8 +14,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PaymentModule } from "@payment/payment.module";
 import { UserModule } from "@user/user.module";
 import { RouterModule } from "nest-router";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 
 /**
  * Main module for the entire app.
@@ -45,9 +43,7 @@ import { AppService } from "./app.service";
         UserModule,
         PaymentModule,
     ],
-    controllers: [AppController],
     providers: [
-        AppService,
         {
             provide: APP_GUARD,
             useClass: JwtAuthGuard,
