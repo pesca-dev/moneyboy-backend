@@ -1,5 +1,16 @@
 import { IUser } from "@interfaces/user";
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, Req, UseInterceptors } from "@nestjs/common";
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Req,
+    UseInterceptors,
+} from "@nestjs/common";
 import { PaymentService } from "@payment/payment.service";
 import { PaymentDTOImpl } from "@payment/types/paymentDTO.impl";
 import { Request } from "express";
@@ -8,14 +19,30 @@ import { Request } from "express";
 export class PaymentController {
     constructor(private paymentService: PaymentService) {}
 
-    @Post("add")
-    public async postAdd(@Req() req: Request, @Body() payment: PaymentDTOImpl) {
-        return this.paymentService.createPayment(req.user as IUser, payment);
+    @Post()
+    public async createPayment(@Req() req: Request, @Body() payment: PaymentDTOImpl) {
+        return this.paymentService.create(req.user as IUser, payment);
+    }
+
+    @Get()
+    public async findAll() {
+        return this.paymentService.findAll();
     }
 
     @Get(":id")
     @UseInterceptors(ClassSerializerInterceptor)
-    public async getById(@Req() req: Request, @Param("id") id: string) {
-        return this.paymentService.getById(req.user as IUser, id);
+    public async findOne(@Req() req: Request, @Param("id") id: string) {
+        return this.paymentService.findOne(req.user as IUser, id);
+    }
+
+    @Patch(":id")
+    public async update(@Req() _req: Request, @Body() payment: PaymentDTOImpl) {
+        // TODO lome: add auth check
+        return this.paymentService.update(payment);
+    }
+
+    @Delete(":id")
+    public async remove(@Param("id") id: string) {
+        return this.paymentService.remove(id);
     }
 }

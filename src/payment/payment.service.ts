@@ -14,7 +14,7 @@ export class PaymentService {
         @InjectRepository(Payment) private readonly paymentRepository: Repository<Payment>,
     ) {}
 
-    public async createPayment(from: IUser, { to, date, amount }: PaymentDTO) {
+    public async create(from: IUser, { to, date, amount }: PaymentDTO) {
         const target = await this.userService.findById(to);
         if (!target) {
             throw new BadRequestException("Target user does not exist.");
@@ -30,7 +30,11 @@ export class PaymentService {
         await this.paymentRepository.save(payment);
     }
 
-    public async getById(user: IUser, id: string) {
+    public async findAll() {
+        return this.paymentRepository.find();
+    }
+
+    public async findOne(user: IUser, id: string) {
         const payment = await this.paymentRepository.findOne({
             where: {
                 id: id,
@@ -43,5 +47,13 @@ export class PaymentService {
         }
 
         return payment;
+    }
+
+    public async update(_payment: PaymentDTO) {
+        throw new Error("Not implemented");
+    }
+
+    public async remove(_id: string) {
+        throw new Error("Not implemented");
     }
 }
