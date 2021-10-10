@@ -1,4 +1,3 @@
-import { Restricted } from "@global";
 import { IUser } from "@interfaces/user";
 import { Exclude, Expose } from "class-transformer";
 import { Column, Entity, PrimaryColumn } from "typeorm";

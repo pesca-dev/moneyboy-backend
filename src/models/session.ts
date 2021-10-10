@@ -1,4 +1,3 @@
-import { Restricted } from "@global";
 import { ISession } from "@interfaces/session";
 import { User } from "@models/user";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";

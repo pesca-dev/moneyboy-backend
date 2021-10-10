@@ -31,15 +31,19 @@ export class PaymentService {
     }
 
     public async findAll() {
-        return this.paymentRepository.find();
+        const relations: Keys<Payment> = ["to", "from"];
+        return this.paymentRepository.find({
+            relations,
+        });
     }
 
     public async findOne(user: IUser, id: string) {
+        const relations: Keys<Payment> = ["to", "from"];
         const payment = await this.paymentRepository.findOne({
             where: {
                 id: id,
             },
-            relations: ["to", "from"],
+            relations,
         });
 
         if (!payment || (payment.from.id !== user.id && payment.to.id !== user.id)) {

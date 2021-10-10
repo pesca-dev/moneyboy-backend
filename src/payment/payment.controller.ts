@@ -25,6 +25,7 @@ export class PaymentController {
     }
 
     @Get()
+    @UseInterceptors(ClassSerializerInterceptor)
     public async findAll() {
         return this.paymentService.findAll();
     }

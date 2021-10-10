@@ -44,11 +44,12 @@ export class SessionService {
      * Get a session with the provided id.
      */
     public async getSession(sessionId: string): Promise<ISession | undefined> {
+        const relations: Keys<Session> = ["user"];
         return await this.sessionRepository.findOne({
             where: {
                 id: sessionId,
             },
-            relations: ["user"],
+            relations,
         });
     }
 
