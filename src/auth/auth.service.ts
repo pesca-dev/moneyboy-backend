@@ -66,7 +66,7 @@ export class AuthService {
         // check, if user already exists
         let user = await this.userService.findByName(userData.username);
         if (user) {
-            if (user.emailVerified) {
+            if (user.emailVerified || user.email !== userData.email) {
                 // user exists and is verified
                 throw new BadRequestException("Username already exists");
             }
