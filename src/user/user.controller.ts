@@ -1,4 +1,4 @@
-import { Public } from "@auth/guards/public.guard";
+import { IUser } from "@interfaces/user";
 import {
     BadRequestException,
     ClassSerializerInterceptor,
@@ -6,13 +6,12 @@ import {
     Get,
     Param,
     Req,
-    Res,
     SerializeOptions,
     UnauthorizedException,
     UseInterceptors,
 } from "@nestjs/common";
 import { UserService } from "@user/user.service";
-import { Request, Response } from "express";
+import { Request } from "express";
 
 /**
  * Controller for handling user-related endpoints.
@@ -23,7 +22,7 @@ export class UserController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("")
-    public async getAllUsers() {
+    public async getAllUsers(): Promise<IUser[]> {
         const users = await this.userService.findAll();
         return users;
     }
@@ -33,7 +32,8 @@ export class UserController {
     })
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("profile")
-    public async getProfile(@Req() req: Request) {
+    public async getProfile(@Req() req: Request): Promise<IUser> {
+        // TODO lome: move this to profile module
         const user = await this.userService.findById(req.user?.id ?? "");
         if (!user) {
             throw new UnauthorizedException();
@@ -41,20 +41,9 @@ export class UserController {
         return user;
     }
 
-    @Get("verify")
-    @Public()
-    public async verifyEmail(@Req() req: Request, @Res() res: Response) {
-        const token = req.query.t as string;
-        if (!token) {
-            throw new BadRequestException();
-        }
-        await this.userService.verifyUser(token);
-        res.send("Mail successfully verified!");
-    }
-
     @UseInterceptors(ClassSerializerInterceptor)
     @Get(":id")
-    public async getUserById(@Param("id") id: string) {
+    public async getUserById(@Param("id") id: string): Promise<IUser> {
         const user = await this.userService.findById(id);
         if (!user) {
             throw new BadRequestException();

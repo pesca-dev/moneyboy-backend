@@ -1,3 +1,4 @@
+import { IPayment } from "@interfaces/payment";
 import { IUser } from "@interfaces/user";
 import {
     Body,
@@ -20,19 +21,20 @@ export class PaymentController {
     constructor(private paymentService: PaymentService) {}
 
     @Post()
-    public async createPayment(@Req() req: Request, @Body() payment: PaymentDTOImpl) {
+    @UseInterceptors(ClassSerializerInterceptor)
+    public async createPayment(@Req() req: Request, @Body() payment: PaymentDTOImpl): Promise<IPayment> {
         return this.paymentService.create(req.user as IUser, payment);
     }
 
     @Get()
     @UseInterceptors(ClassSerializerInterceptor)
-    public async findAll() {
+    public async findAll(): Promise<IPayment[]> {
         return this.paymentService.findAll();
     }
 
     @Get(":id")
     @UseInterceptors(ClassSerializerInterceptor)
-    public async findOne(@Req() req: Request, @Param("id") id: string) {
+    public async findOne(@Req() req: Request, @Param("id") id: string): Promise<IPayment> {
         return this.paymentService.findOne(req.user as IUser, id);
     }
 

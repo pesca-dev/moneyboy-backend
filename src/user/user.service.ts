@@ -75,7 +75,7 @@ export class UserService {
         }
     }
 
-    public async updateUser(user: IUser) {
+    public async updateUser(user: IUser): Promise<void> {
         await this.userRepository.update(
             {
                 id: user.id,
@@ -84,7 +84,7 @@ export class UserService {
         );
     }
 
-    public async deleteUser(id: string) {
+    public async deleteUser(id: string): Promise<void> {
         await this.userRepository.delete({
             id,
         });
@@ -94,7 +94,7 @@ export class UserService {
      * Change the verification status of a user to true.
      * @param token token with encoded user id
      */
-    public async verifyUser(token: string) {
+    public async verifyUser(token: string): Promise<void> {
         let id = undefined;
         try {
             id = this.jwtService.verify(token, {

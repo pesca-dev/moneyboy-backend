@@ -92,34 +92,34 @@ export class AuthService {
      * Handle errors occuring while sending registration mail.
      */
     @On("registration.mail.send.error")
-    public async handleRegistrationMailError({ id }: EVENTS["registration.mail.send.error"]) {
+    public async handleRegistrationMailError({ id }: EVENTS["registration.mail.send.error"]): Promise<void> {
         return this.userService.deleteUser(id);
     }
 
     /**
      * Logout of a provided session. This automatically invalidates all tokens connected with this session.
      */
-    public async logout(user?: RequestUser) {
+    public async logout(user?: RequestUser): Promise<void> {
         if (!user) {
             throw new UnauthorizedException();
         }
-        await this.sessionService.destroySession(user.session.id);
+        return this.sessionService.destroySession(user.session.id);
     }
 
-    private signAccessToken(payload: JWTToken) {
+    private signAccessToken(payload: JWTToken): string {
         return this.jwtService.sign(payload, {
             expiresIn: "15m",
         });
     }
 
-    private signRefreshToken(payload: JWTToken) {
+    private signRefreshToken(payload: JWTToken): string {
         return this.jwtService.sign(payload, {
             secret: variables.token.refreshTokenSecret,
             expiresIn: "2 weeks",
         });
     }
 
-    private signVerifyToken(payload: string) {
+    private signVerifyToken(payload: string): string {
         return this.jwtService.sign(payload, {
             secret: variables.token.verifyTokenSecret,
         });
@@ -157,7 +157,7 @@ export class AuthService {
         };
     }
 
-    public async verifyUser(token: string) {
+    public async verifyUser(token: string): Promise<void> {
         return this.userService.verifyUser(token);
     }
 }

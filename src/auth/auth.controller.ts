@@ -41,7 +41,7 @@ export class AuthController {
     @Public()
     @Post("register")
     @HttpCode(HttpStatus.ACCEPTED)
-    public async register(@Body() userData: UserRegisterDTOImpl) {
+    public async register(@Body() userData: UserRegisterDTOImpl): Promise<void> {
         await this.authService.register(userData);
     }
 
@@ -54,13 +54,13 @@ export class AuthController {
 
     @Delete("logout")
     @HttpCode(HttpStatus.ACCEPTED)
-    public async logout(@Req() req: Request) {
+    public async logout(@Req() req: Request): Promise<void> {
         await this.authService.logout(req.user);
     }
 
     @Get("verify")
     @Public()
-    public async verifyEmail(@Req() req: Request, @Res() res: Response) {
+    public async verifyEmail(@Req() req: Request, @Res() res: Response): Promise<void> {
         const token = req.query.t as string;
         if (!token) {
             throw new BadRequestException();

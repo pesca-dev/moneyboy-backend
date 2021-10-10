@@ -1,7 +1,7 @@
-import { PaymentDTO } from "@interfaces/payment";
+import { IPayment, PaymentDTO } from "@interfaces/payment";
 import { IUser } from "@interfaces/user";
 import { Payment } from "@models/payment";
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotImplementedException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserService } from "@user/user.service";
 import { Repository } from "typeorm";
@@ -14,7 +14,7 @@ export class PaymentService {
         @InjectRepository(Payment) private readonly paymentRepository: Repository<Payment>,
     ) {}
 
-    public async create(from: IUser, { to, date, amount }: PaymentDTO) {
+    public async create(from: IUser, { to, date, amount }: PaymentDTO): Promise<IPayment> {
         const target = await this.userService.findById(to);
         if (!target) {
             throw new BadRequestException("Target user does not exist.");
@@ -27,17 +27,17 @@ export class PaymentService {
         payment.date = date;
         payment.amount = amount;
 
-        await this.paymentRepository.save(payment);
+        return this.paymentRepository.save(payment);
     }
 
-    public async findAll() {
+    public async findAll(): Promise<IPayment[]> {
         const relations: Keys<Payment> = ["to", "from"];
         return this.paymentRepository.find({
             relations,
         });
     }
 
-    public async findOne(user: IUser, id: string) {
+    public async findOne(user: IUser, id: string): Promise<IPayment> {
         const relations: Keys<Payment> = ["to", "from"];
         const payment = await this.paymentRepository.findOne({
             where: {
@@ -54,10 +54,10 @@ export class PaymentService {
     }
 
     public async update(_payment: PaymentDTO) {
-        throw new Error("Not implemented");
+        throw new NotImplementedException();
     }
 
     public async remove(_id: string) {
-        throw new Error("Not implemented");
+        throw new NotImplementedException();
     }
 }
