@@ -1,7 +1,7 @@
-import { ISession } from "@interfaces/session";
-import { Session } from "@models/session";
-import { SessionService } from "@session/session.service";
-import { UserService } from "@user/user.service";
+import { ISession } from "@moneyboy/interfaces/session";
+import { Session } from "@moneyboy/models/session";
+import { SessionService } from "@moneyboy/session/session.service";
+import { UserService } from "@moneyboy/user/user.service";
 import { Repository } from "typeorm";
 
 const dummySession: ISession = {
@@ -23,7 +23,9 @@ describe("SessionService", () => {
     let sessionService: SessionService;
 
     beforeEach(() => {
-        userServiceMock = new (jest.createMockFromModule<any>("@user/user.service").UserService)() as UserService;
+        userServiceMock = new (jest.createMockFromModule<any>(
+            "@moneyboy/user/user.service",
+        ).UserService)() as UserService;
         sessionRepositoryMock = new (jest.createMockFromModule<any>("typeorm").Repository)() as Repository<Session>;
         sessionService = new SessionService(userServiceMock, sessionRepositoryMock);
     });
