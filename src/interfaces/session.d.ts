@@ -1,4 +1,4 @@
-import { IUser } from "@interfaces/user";
+import { IUser } from "@moneyboy/interfaces/user";
 
 /**
  * Data used for storing user sessions internally.

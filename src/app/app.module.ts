@@ -1,19 +1,19 @@
+import { AuthModule } from "@moneyboy/auth/auth.module";
+import { JwtAuthGuard } from "@moneyboy/auth/guards/jwt-auth.guard";
+import routes from "@moneyboy/config/routes";
+import variables from "@moneyboy/config/variables";
+import { MailModule } from "@moneyboy/mail/mail.module";
+import { Payment } from "@moneyboy/models/payment";
+import { Session } from "@moneyboy/models/session";
+import { User } from "@moneyboy/models/user";
+import { PaymentModule } from "@moneyboy/payment/payment.module";
+import { UserModule } from "@moneyboy/user/user.module";
 import { Module } from "@nestjs/common";
-import { RouterModule } from "nest-router";
 import { APP_GUARD } from "@nestjs/core";
-import { TypeOrmModule } from "@nestjs/typeorm";
-
-import routes from "@config/routes";
-import variables from "@config/variables";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { AuthModule } from "@auth/auth.module";
-import { UserModule } from "@user/user.module";
-import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
-import { User } from "@models/user";
-import { Session } from "@models/session";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { ThrottlerModule } from "@nestjs/throttler";
-import { MailerModule } from "@nestjs-modules/mailer";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { RouterModule } from "nest-router";
 
 /**
  * Main module for the entire app.
@@ -22,6 +22,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
  */
 @Module({
     imports: [
+        EventEmitterModule.forRoot(),
         TypeOrmModule.forRoot({
             type: "mysql",
             host: variables.database.host,
@@ -29,27 +30,20 @@ import { MailerModule } from "@nestjs-modules/mailer";
             username: variables.database.username,
             password: variables.database.password,
             database: variables.database.name,
-            entities: [User, Session],
-            // synchronize: true,
+            entities: [User, Session, Payment],
+            synchronize: true,
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
         }),
-        MailerModule.forRoot({
-            transport: {
-                host: variables.mail.host,
-                port: variables.mail.port,
-                auth: variables.mail.auth,
-            },
-        }),
+        MailModule,
         RouterModule.forRoutes(routes),
         AuthModule,
         UserModule,
+        PaymentModule,
     ],
-    controllers: [AppController],
     providers: [
-        AppService,
         {
             provide: APP_GUARD,
             useClass: JwtAuthGuard,

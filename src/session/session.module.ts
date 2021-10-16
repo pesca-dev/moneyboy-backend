@@ -1,8 +1,8 @@
-import { Session } from "@models/session";
+import { Session } from "@moneyboy/models/session";
+import { SessionService } from "@moneyboy/session/session.service";
+import { UserModule } from "@moneyboy/user/user.module";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { SessionService } from "@session/session.service";
-import { UserModule } from "@user/user.module";
 
 /**
  * Module for managing login sessions.

@@ -1,13 +1,14 @@
-import "reflect-metadata";
+import { AppModule } from "@moneyboy/app/app.module";
+// import csurf from "csurf";
+import { ValidationPipe } from "@moneyboy/pipes/validation.pipe";
 import { NestFactory } from "@nestjs/core";
 import helmet from "helmet";
-// import csurf from "csurf";
-
-import { ValidationPipe } from "@pipes/validation.pipe";
-import { AppModule } from "@app/app.module";
+import "reflect-metadata";
 
 (async () => {
-    const app = await NestFactory.create(AppModule, { cors: true });
+    const app = await NestFactory.create(AppModule, {
+        cors: true,
+    });
     app.use(helmet());
     // app.use(csurf);
     // use validation globally

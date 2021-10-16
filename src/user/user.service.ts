@@ -1,12 +1,11 @@
-import { IUser } from "@interfaces/user";
-import { User } from "@models/user";
+import variables from "@moneyboy/config/variables";
+import { IUser } from "@moneyboy/interfaces/user";
+import { User } from "@moneyboy/models/user";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { v4 as uuid } from "uuid";
+import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { MailerService } from "@nestjs-modules/mailer";
-import { JwtService } from "@nestjs/jwt";
-import variables from "@config/variables";
+import { v4 as uuid } from "uuid";
 
 interface CreateUserData {
     username: string;
@@ -25,80 +24,22 @@ interface CreateUserData {
 export class UserService {
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private readonly mailService: MailerService,
         private readonly jwtService: JwtService,
     ) {}
 
-    /**
-     * Create a new user with provided data.
-     */
-    public async createUser(userData: CreateUserData): Promise<IUser> {
-        if (
-            await this.userRepository.findOne({
-                where: {
-                    username: userData.username,
-                },
-            })
-        ) {
-            throw new BadRequestException("Username already exists");
-        }
-        let user;
-        try {
-            user = await this.userRepository.save(
-                User.fromData({
-                    ...userData,
-                    id: uuid(),
-                    emailVerified: false,
-                }),
-            );
-        } catch (e) {
-            throw new InternalServerErrorException();
-        }
-
-        // try to send verification mail to user
-        const jwt = this.jwtService.sign(user.id, {
-            secret: variables.token.verifyTokenSecret,
+    public async findAll(): Promise<IUser[]> {
+        const users = await this.userRepository.find({
+            where: {
+                emailVerified: true,
+            },
         });
-        const url = `${variables.host}/user/verify?t=${jwt}`;
-        try {
-            await this.mailService.sendMail({
-                to: user.email,
-                from: variables.mail.addr,
-                subject: "MoneyBoy Registration",
-                text: `Thank you for registering for MoneyBoy! To verify your account, please click the following link: ${url}`,
-            });
-        } catch {
-            // on failure, delete user from database
-            await this.userRepository.delete(user);
-            throw new InternalServerErrorException();
-        }
-
-        return user;
-    }
-
-    /**
-     * Change the verification status of a user to true.
-     * @param token token with encoded user id
-     */
-    public async verifyUser(token: string) {
-        let id = undefined;
-        try {
-            id = this.jwtService.verify(token, {
-                secret: variables.token.verifyTokenSecret,
-            });
-        } catch {}
-        const user = await this.findOneById(id);
-        if (!user || user.emailVerified) {
-            throw new BadRequestException();
-        }
-        user.emailVerified = true;
-        await this.userRepository.save(user);
+        return users;
     }
 
     /**
      * Find a user by its username.
      */
-    public async findOne(username: string): Promise<IUser | undefined> {
+    public async findByName(username: string): Promise<IUser | undefined> {
         return this.userRepository.findOne({
             where: {
                 username,
@@ -109,11 +50,62 @@ export class UserService {
     /**
      * Find a user by its id.
      */
-    public async findOneById(id: string): Promise<IUser | undefined> {
+    public async findById(id: string): Promise<IUser | undefined> {
         return this.userRepository.findOne({
             where: {
                 id,
             },
         });
+    }
+
+    /**
+     * Tries to create a new user. If user already exists, updates it.
+     */
+    public async createUser(userData: CreateUserData): Promise<IUser> {
+        try {
+            return this.userRepository.save(
+                User.fromData({
+                    ...userData,
+                    id: uuid(),
+                    emailVerified: false,
+                }),
+            );
+        } catch (e) {
+            throw new InternalServerErrorException("Error during saving of user");
+        }
+    }
+
+    public async updateUser(user: IUser): Promise<void> {
+        await this.userRepository.update(
+            {
+                id: user.id,
+            },
+            user,
+        );
+    }
+
+    public async deleteUser(id: string): Promise<void> {
+        await this.userRepository.delete({
+            id,
+        });
+    }
+
+    /**
+     * Change the verification status of a user to true.
+     * @param token token with encoded user id
+     */
+    public async verifyUser(token: string): Promise<void> {
+        let id = undefined;
+        try {
+            id = this.jwtService.verify(token, {
+                secret: variables.token.verifyTokenSecret,
+            });
+        } catch {}
+        const user = await this.findById(id);
+        if (!user || user.emailVerified) {
+            throw new BadRequestException();
+        }
+        user.emailVerified = true;
+        await this.userRepository.save(user);
     }
 }

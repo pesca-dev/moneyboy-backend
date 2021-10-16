@@ -21,9 +21,11 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
+        "@casl/ability": "^5.4.3",
         "@nestjs-modules/mailer": "^1.6.0",
         "@nestjs/common": "^8.1.1",
         "@nestjs/core": "^8.1.1",
+        "@nestjs/event-emitter": "^1.0.0",
         "@nestjs/jwt": "^8.0.0",
         "@nestjs/passport": "^8.0.1",
         "@nestjs/platform-express": "^8.1.1",
@@ -93,6 +95,9 @@
             "**/*.(t|j)s"
         ],
         "coverageDirectory": "../coverage",
-        "testEnvironment": "node"
+        "testEnvironment": "node",
+        "moduleNameMapper": {
+            "@moneyboy/(.*)$": "<rootDir>/$1"
+        }
     }
 }

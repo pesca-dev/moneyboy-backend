@@ -1,12 +1,11 @@
+import { ISession } from "@moneyboy/interfaces/session";
+import { Session } from "@moneyboy/models/session";
+import { User } from "@moneyboy/models/user";
+import { UserService } from "@moneyboy/user/user.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { v4 as uuid } from "uuid";
-
-import { UserService } from "@user/user.service";
-import { Session } from "@models/session";
-import { User } from "@models/user";
-import { ISession } from "@interfaces/session";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { v4 as uuid } from "uuid";
 
 /**
  * Service for managing login sessions.
@@ -20,11 +19,15 @@ export class SessionService {
         @InjectRepository(Session) private readonly sessionRepository: Repository<Session>,
     ) {}
 
+    public async getAll(): Promise<ISession[] | undefined> {
+        return await this.sessionRepository.find();
+    }
+
     /**
      * Create a new sessions for a provided userid and return the id of the newly created session.
      */
     public async createSession(userId: string): Promise<string> {
-        const user = await this.userService.findOneById(userId);
+        const user = await this.userService.findById(userId);
         if (!user) {
             throw new UnauthorizedException();
         }
@@ -41,11 +44,12 @@ export class SessionService {
      * Get a session with the provided id.
      */
     public async getSession(sessionId: string): Promise<ISession | undefined> {
+        const relations: Keys<Session> = ["user"];
         return await this.sessionRepository.findOne({
             where: {
                 id: sessionId,
             },
-            relations: ["user"],
+            relations,
         });
     }
 

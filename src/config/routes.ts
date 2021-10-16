@@ -1,19 +1,23 @@
+import { AuthModule } from "@moneyboy/auth/auth.module";
+import { PaymentModule } from "@moneyboy/payment/payment.module";
+import { UserModule } from "@moneyboy/user/user.module";
 import { Routes } from "nest-router";
-
-import { AuthModule } from "@auth/auth.module";
-import { UserModule } from "@user/user.module";
 
 /**
  * Routes for the api of the application.
  */
 const routes: Routes = [
     {
-        path: "/auth",
+        path: "",
         module: AuthModule,
     },
     {
-        path: "/user",
+        path: "",
         module: UserModule,
+    },
+    {
+        path: "",
+        module: PaymentModule,
     },
 ];
 

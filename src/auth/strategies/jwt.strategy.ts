@@ -1,7 +1,8 @@
-import variables from "@config/variables";
+import variables from "@moneyboy/config/variables";
+import { SessionService } from "@moneyboy/session/session.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { SessionService } from "@session/session.service";
+import { RequestUser } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 /**
@@ -25,11 +26,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
      * @param payload JWT to validate
      * @returns extracted information
      */
-    public async validate(payload: any) {
+    public async validate(payload: any): Promise<RequestUser> {
         const session = await this.sessionService.getSession(payload?.sub ?? "");
         if (!session) {
             throw new UnauthorizedException();
         }
-        return session;
+        return {
+            ...session.user,
+            session,
+        };
     }
 }
