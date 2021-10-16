@@ -31,7 +31,7 @@ import { RouterModule } from "nest-router";
             password: variables.database.password,
             database: variables.database.name,
             entities: [User, Session, Payment],
-            synchronize: true,
+            // synchronize: true,
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
