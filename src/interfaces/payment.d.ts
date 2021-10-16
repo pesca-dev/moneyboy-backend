@@ -1,4 +1,4 @@
-import { User } from "@models/user";
+import { User } from "@moneyboy/models/user";
 
 /**
  * Interface representing a payment.

@@ -1,5 +1,5 @@
-import { ISession } from "@interfaces/session";
-import { IUser } from "@interfaces/user";
+import { ISession } from "@moneyboy/interfaces/session";
+import { IUser } from "@moneyboy/interfaces/user";
 
 /**
  * Extend the express module a bit, so we can safely store some information in request objects.

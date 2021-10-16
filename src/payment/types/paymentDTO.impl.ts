@@ -1,4 +1,4 @@
-import { PaymentCreateDTO, PaymentUpdateDTO } from "@interfaces/payment";
+import { PaymentCreateDTO, PaymentUpdateDTO } from "@moneyboy/interfaces/payment";
 import { IsNumber, IsString, IsUUID } from "class-validator";
 
 export class PaymentCreateDTOImpl implements PaymentCreateDTO {

@@ -1,4 +1,5 @@
-import { IUser } from "@interfaces/user";
+import { IUser } from "@moneyboy/interfaces/user";
+import { UserService } from "@moneyboy/user/user.service";
 import {
     BadRequestException,
     ClassSerializerInterceptor,
@@ -10,7 +11,6 @@ import {
     UnauthorizedException,
     UseInterceptors,
 } from "@nestjs/common";
-import { UserService } from "@user/user.service";
 import { Request } from "express";
 
 /**

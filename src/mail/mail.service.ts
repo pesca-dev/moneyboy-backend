@@ -1,5 +1,5 @@
-import variables from "@config/variables";
-import { EVENTS, EventService, On } from "@events/event.service";
+import variables from "@moneyboy/config/variables";
+import { EVENTS, EventService, On } from "@moneyboy/events/event.service";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 

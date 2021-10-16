@@ -1,4 +1,4 @@
-import { IUser } from "@interfaces/user";
+import { IUser } from "@moneyboy/interfaces/user";
 import { Exclude, Expose } from "class-transformer";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 

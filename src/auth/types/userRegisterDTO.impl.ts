@@ -1,4 +1,4 @@
-import { UserRegisterDTO } from "@interfaces/user";
+import { UserRegisterDTO } from "@moneyboy/interfaces/user";
 import { IsEmail, IsString } from "class-validator";
 
 export class UserRegisterDTOImpl implements UserRegisterDTO {

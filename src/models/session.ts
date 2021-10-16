@@ -1,5 +1,5 @@
-import { ISession } from "@interfaces/session";
-import { User } from "@models/user";
+import { ISession } from "@moneyboy/interfaces/session";
+import { User } from "@moneyboy/models/user";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 
 /**

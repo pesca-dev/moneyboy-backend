@@ -1,9 +1,9 @@
-import { IPayment, PaymentCreateDTO, PaymentUpdateDTO } from "@interfaces/payment";
-import { IUser } from "@interfaces/user";
-import { Payment } from "@models/payment";
+import { IPayment, PaymentCreateDTO, PaymentUpdateDTO } from "@moneyboy/interfaces/payment";
+import { IUser } from "@moneyboy/interfaces/user";
+import { Payment } from "@moneyboy/models/payment";
+import { UserService } from "@moneyboy/user/user.service";
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserService } from "@user/user.service";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 

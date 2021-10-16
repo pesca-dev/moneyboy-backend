@@ -1,5 +1,5 @@
-import { IPayment } from "@interfaces/payment";
-import { User } from "@models/user";
+import { IPayment } from "@moneyboy/interfaces/payment";
+import { User } from "@moneyboy/models/user";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 
 @Entity()

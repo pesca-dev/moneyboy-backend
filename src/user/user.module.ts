@@ -1,8 +1,8 @@
-import { User } from "@models/user";
+import { User } from "@moneyboy/models/user";
+import { UserController } from "@moneyboy/user/user.controller";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { UserController } from "@user/user.controller";
 import { UserService } from "./user.service";
 
 /**

@@ -1,6 +1,6 @@
-import { AuthModule } from "@auth/auth.module";
-import { PaymentModule } from "@payment/payment.module";
-import { UserModule } from "@user/user.module";
+import { AuthModule } from "@moneyboy/auth/auth.module";
+import { PaymentModule } from "@moneyboy/payment/payment.module";
+import { UserModule } from "@moneyboy/user/user.module";
 import { Routes } from "nest-router";
 
 /**

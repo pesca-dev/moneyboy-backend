@@ -1,6 +1,6 @@
-import variables from "@config/variables";
-import { IUser } from "@interfaces/user";
-import { User } from "@models/user";
+import variables from "@moneyboy/config/variables";
+import { IUser } from "@moneyboy/interfaces/user";
+import { User } from "@moneyboy/models/user";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";

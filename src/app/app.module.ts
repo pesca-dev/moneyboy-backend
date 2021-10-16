@@ -1,18 +1,18 @@
-import { AuthModule } from "@auth/auth.module";
-import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
-import routes from "@config/routes";
-import variables from "@config/variables";
-import { MailModule } from "@mail/mail.module";
-import { Payment } from "@models/payment";
-import { Session } from "@models/session";
-import { User } from "@models/user";
+import { AuthModule } from "@moneyboy/auth/auth.module";
+import { JwtAuthGuard } from "@moneyboy/auth/guards/jwt-auth.guard";
+import routes from "@moneyboy/config/routes";
+import variables from "@moneyboy/config/variables";
+import { MailModule } from "@moneyboy/mail/mail.module";
+import { Payment } from "@moneyboy/models/payment";
+import { Session } from "@moneyboy/models/session";
+import { User } from "@moneyboy/models/user";
+import { PaymentModule } from "@moneyboy/payment/payment.module";
+import { UserModule } from "@moneyboy/user/user.module";
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { PaymentModule } from "@payment/payment.module";
-import { UserModule } from "@user/user.module";
 import { RouterModule } from "nest-router";
 
 /**

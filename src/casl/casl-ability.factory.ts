@@ -1,6 +1,6 @@
 import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects } from "@casl/ability";
-import { IUser } from "@interfaces/user";
-import { Payment } from "@models/payment";
+import { IUser } from "@moneyboy/interfaces/user";
+import { Payment } from "@moneyboy/models/payment";
 import { Injectable } from "@nestjs/common";
 
 export enum Action {

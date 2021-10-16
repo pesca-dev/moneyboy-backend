@@ -1,4 +1,4 @@
-import { EventService } from "@events/event.service";
+import { EventService } from "@moneyboy/events/event.service";
 import { Module } from "@nestjs/common";
 
 /**

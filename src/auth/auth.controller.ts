@@ -1,8 +1,8 @@
-import { AuthService, ValidatedUserReturnType } from "@auth/auth.service";
-import { LocalAuthGurad } from "@auth/guards/local-auth.guard";
-import { Public } from "@auth/guards/public.guard";
-import { RefreshTokenDTOImpl } from "@auth/types/refreshTokenDTO.impl";
-import { UserRegisterDTOImpl } from "@auth/types/userRegisterDTO.impl";
+import { AuthService, ValidatedUserReturnType } from "@moneyboy/auth/auth.service";
+import { LocalAuthGurad } from "@moneyboy/auth/guards/local-auth.guard";
+import { Public } from "@moneyboy/auth/guards/public.guard";
+import { RefreshTokenDTOImpl } from "@moneyboy/auth/types/refreshTokenDTO.impl";
+import { UserRegisterDTOImpl } from "@moneyboy/auth/types/userRegisterDTO.impl";
 import {
     BadRequestException,
     Body,

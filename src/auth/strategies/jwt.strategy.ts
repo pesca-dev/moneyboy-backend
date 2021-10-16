@@ -1,7 +1,7 @@
-import variables from "@config/variables";
+import variables from "@moneyboy/config/variables";
+import { SessionService } from "@moneyboy/session/session.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { SessionService } from "@session/session.service";
 import { RequestUser } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
 

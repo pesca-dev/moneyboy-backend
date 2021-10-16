@@ -1,6 +1,8 @@
-import { Action, CaslAbilityFactory } from "@casl/casl-ability.factory";
-import { IPayment } from "@interfaces/payment";
-import { IUser } from "@interfaces/user";
+import { Action, CaslAbilityFactory } from "@moneyboy/casl/casl-ability.factory";
+import { IPayment } from "@moneyboy/interfaces/payment";
+import { IUser } from "@moneyboy/interfaces/user";
+import { PaymentService } from "@moneyboy/payment/payment.service";
+import { PaymentCreateDTOImpl, PaymentUpdateDTOImpl } from "@moneyboy/payment/types/paymentDTO.impl";
 import {
     BadRequestException,
     Body,
@@ -16,8 +18,6 @@ import {
     UnauthorizedException,
     UseInterceptors,
 } from "@nestjs/common";
-import { PaymentService } from "@payment/payment.service";
-import { PaymentCreateDTOImpl, PaymentUpdateDTOImpl } from "@payment/types/paymentDTO.impl";
 import { Request } from "express";
 
 /**

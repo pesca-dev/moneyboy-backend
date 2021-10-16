@@ -1,11 +1,11 @@
-import variables from "@config/variables";
-import { EVENTS, EventService, On } from "@events/event.service";
-import { JWTToken } from "@interfaces/tokens";
-import { UserRegisterDTO } from "@interfaces/user";
+import variables from "@moneyboy/config/variables";
+import { EVENTS, EventService, On } from "@moneyboy/events/event.service";
+import { JWTToken } from "@moneyboy/interfaces/tokens";
+import { UserRegisterDTO } from "@moneyboy/interfaces/user";
+import { SessionService } from "@moneyboy/session/session.service";
+import { UserService } from "@moneyboy/user/user.service";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { SessionService } from "@session/session.service";
-import { UserService } from "@user/user.service";
 import { compareSync, hashSync } from "bcrypt";
 import { RequestUser } from "express";
 

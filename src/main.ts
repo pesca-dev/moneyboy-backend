@@ -1,7 +1,7 @@
-import { AppModule } from "@app/app.module";
-import { NestFactory } from "@nestjs/core";
+import { AppModule } from "@moneyboy/app/app.module";
 // import csurf from "csurf";
-import { ValidationPipe } from "@pipes/validation.pipe";
+import { ValidationPipe } from "@moneyboy/pipes/validation.pipe";
+import { NestFactory } from "@nestjs/core";
 import helmet from "helmet";
 import "reflect-metadata";
 

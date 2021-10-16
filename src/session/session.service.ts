@@ -1,9 +1,9 @@
-import { ISession } from "@interfaces/session";
-import { Session } from "@models/session";
-import { User } from "@models/user";
+import { ISession } from "@moneyboy/interfaces/session";
+import { Session } from "@moneyboy/models/session";
+import { User } from "@moneyboy/models/user";
+import { UserService } from "@moneyboy/user/user.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserService } from "@user/user.service";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 

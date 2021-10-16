@@ -1,10 +1,10 @@
-import { CaslModule } from "@casl/casl.module";
-import { Payment } from "@models/payment";
+import { CaslModule } from "@moneyboy/casl/casl.module";
+import { Payment } from "@moneyboy/models/payment";
+import { PaymentController } from "@moneyboy/payment/payment.controller";
+import { PaymentService } from "@moneyboy/payment/payment.service";
+import { UserModule } from "@moneyboy/user/user.module";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { PaymentController } from "@payment/payment.controller";
-import { PaymentService } from "@payment/payment.service";
-import { UserModule } from "@user/user.module";
 
 /**
  * Module containig all classes for managing payments.

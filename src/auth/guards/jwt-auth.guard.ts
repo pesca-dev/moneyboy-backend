@@ -1,4 +1,4 @@
-import { IS_PUBLIC_KEY } from "@auth/guards/public.guard";
+import { IS_PUBLIC_KEY } from "@moneyboy/auth/guards/public.guard";
 import { ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
