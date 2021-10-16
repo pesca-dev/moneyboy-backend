@@ -33,7 +33,7 @@ export interface IPayment {
  *
  * @author Louis Meyer
  */
-export interface PaymentDTO {
+export interface PaymentCreateDTO {
     /**
      * ID of the user this payment is issued for.
      */
@@ -48,4 +48,16 @@ export interface PaymentDTO {
      * Date of this payment.
      */
     date: number;
+}
+
+/**
+ * Interface for updating a payment.
+ *
+ * @author Louis Meyer
+ */
+export interface PaymentUpdateDTO extends PaymentCreateDTO {
+    /**
+     * ID of this payment.
+     */
+    id: string;
 }

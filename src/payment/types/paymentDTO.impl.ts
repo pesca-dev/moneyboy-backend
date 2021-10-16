@@ -1,11 +1,16 @@
-import { PaymentDTO } from "@interfaces/payment";
-import { IsNumber, IsString } from "class-validator";
+import { PaymentCreateDTO, PaymentUpdateDTO } from "@interfaces/payment";
+import { IsNumber, IsString, IsUUID } from "class-validator";
 
-export class PaymentDTOImpl implements PaymentDTO {
+export class PaymentCreateDTOImpl implements PaymentCreateDTO {
     @IsString()
     to!: string;
     @IsNumber()
     amount!: number;
     @IsNumber()
     date!: number;
+}
+
+export class PaymentUpdateDTOImpl extends PaymentCreateDTOImpl implements PaymentUpdateDTO {
+    @IsUUID()
+    id!: string;
 }
