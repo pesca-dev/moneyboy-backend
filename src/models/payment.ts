@@ -20,4 +20,13 @@ export class Payment implements IPayment {
 
     @Column("bigint")
     date!: number;
+
+    /**
+     * Create a new Payment instance from the given data.
+     */
+    public static fromData(data: Restricted<IPayment>): Payment {
+        const payment = new Payment();
+        Object.assign(payment, data);
+        return payment;
+    }
 }
