@@ -2,6 +2,7 @@ import { IUser } from "@moneyboy/interfaces/user";
 import { User } from "@moneyboy/models/user";
 import { hashSync } from "bcrypt";
 import { v4 as uuid } from "uuid";
+
 describe("User", () => {
     it("should be defined", () => {
         expect(new User()).toBeDefined();

@@ -3,6 +3,7 @@ import { IUser } from "@moneyboy/interfaces/user";
 import { Session } from "@moneyboy/models/session";
 import { hashSync } from "bcrypt";
 import { v4 as uuid } from "uuid";
+
 describe("Session", () => {
     it("should be defined", () => {
         expect(new Session()).toBeDefined();
