@@ -66,7 +66,7 @@ describe("PaymentService", () => {
         });
 
         it("should throw BadRequestException, if target user is not defined", () => {
-            expect(
+            return expect(
                 paymentService.create(dummyIssuer, {
                     amount: dummyPayment.amount,
                     date: dummyPayment.date,
@@ -136,16 +136,16 @@ describe("PaymentService", () => {
         });
 
         it("shall return undefined on wrong id", () => {
-            expect(paymentService.findOne("wrongId")).resolves.toBeUndefined();
+            return expect(paymentService.findOne("wrongId")).resolves.toBeUndefined();
         });
 
         it("shall return payment on correct id", () => {
-            expect(paymentService.findOne(payment.id)).resolves.toEqual(payment);
+            return expect(paymentService.findOne(payment.id)).resolves.toEqual(payment);
         });
 
         it("shall query relations aswell", async () => {
             await paymentService.findOne("someId");
-            expect(findOneMock).toHaveBeenCalledWith({ where: { id: "someId" }, relations: ["to", "from"] });
+            return expect(findOneMock).toHaveBeenCalledWith({ where: { id: "someId" }, relations: ["to", "from"] });
         });
     });
 
@@ -180,7 +180,7 @@ describe("PaymentService", () => {
         });
 
         it("shall throw BadRequestException if target user does not exist", () => {
-            expect(
+            return expect(
                 paymentService.update({
                     id: payment.id,
                     to: "totallyWrong",
@@ -191,7 +191,7 @@ describe("PaymentService", () => {
         });
 
         it("shall throw NotFoundException if payment does not exist", () => {
-            expect(
+            return expect(
                 paymentService.update({
                     id: "totallyWrongId",
                     to: dummyTarget.id,

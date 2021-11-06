@@ -49,7 +49,7 @@ describe("JwtStrategy", () => {
         });
 
         it("should throw UnauthorizedException, if payload is invalid", () => {
-            expect(
+            return expect(
                 jwtStrategy.validate({
                     sub: "wrongSessionId",
                 }),

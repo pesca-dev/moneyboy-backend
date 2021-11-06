@@ -54,15 +54,19 @@ describe("AuthService", () => {
         });
 
         it("should return correct id, when credentials are correct", () => {
-            expect(authService.validateUser(dummyUser.username, dummyPassword)).resolves.toEqual({
+            return expect(authService.validateUser(dummyUser.username, dummyPassword)).resolves.toEqual({
                 id: dummyUser.id,
             });
         });
 
-        it("should return null, when credentials are wrong", () => {
-            expect(authService.validateUser("randomUser", "randomPass")).resolves.toBeNull();
-            expect(authService.validateUser(dummyUser.username, "randomPass")).resolves.toBeNull();
-            expect(authService.validateUser("randomUser", dummyPassword)).resolves.toBeNull();
+        it("should return null, when both credentials are wrong", () => {
+            return expect(authService.validateUser("randomUser", "randomPass")).resolves.toBeNull();
+        });
+        it("should return null, when password is wrong", () => {
+            return expect(authService.validateUser(dummyUser.username, "randomPass")).resolves.toBeNull();
+        });
+        it("should return null, when username is wrong", () => {
+            return expect(authService.validateUser("randomUser", dummyPassword)).resolves.toBeNull();
         });
     });
 
@@ -123,13 +127,13 @@ describe("AuthService", () => {
                 }
                 return undefined;
             });
-            expect(authService.register({ ...dummyUser, email: "anoter@example.com" })).rejects.toThrowError(
+            return expect(authService.register({ ...dummyUser, email: "anoter@example.com" })).rejects.toThrowError(
                 BadRequestException,
             );
         });
 
         it("should throw BadRequestException if emailIsVerified", () => {
-            expect(authService.register(dummyUser)).rejects.toThrowError(BadRequestException);
+            return expect(authService.register(dummyUser)).rejects.toThrowError(BadRequestException);
         });
 
         it("should create a user in the userService", async () => {
@@ -177,7 +181,7 @@ describe("AuthService", () => {
         });
 
         it("should throw UnauthorizedException, if user is undefined", () => {
-            expect(authService.logout()).rejects.toThrowError(UnauthorizedException);
+            return expect(authService.logout()).rejects.toThrowError(UnauthorizedException);
         });
 
         it("should destroy the session in sessionService", async () => {
@@ -246,9 +250,12 @@ describe("AuthService", () => {
             expect(authService.renewAccessToken).toBeDefined();
         });
 
-        it("should throw UnauthorizedException on invalid tokens", () => {
-            expect(authService.renewAccessToken(invalidSecret)).rejects.toThrowError(UnauthorizedException);
-            expect(authService.renewAccessToken(invalidSessionId)).rejects.toThrowError(UnauthorizedException);
+        it("should throw UnauthorizedException on invalid secret", () => {
+            return expect(authService.renewAccessToken(invalidSecret)).rejects.toThrowError(UnauthorizedException);
+        });
+
+        it("should throw UnauthorizedException on invalid session id", () => {
+            return expect(authService.renewAccessToken(invalidSessionId)).rejects.toThrowError(UnauthorizedException);
         });
 
         it("should return a new access_token", async () => {

@@ -7,7 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-interface CreateUserData {
+export interface CreateUserData {
     username: string;
     displayName: string;
     password: string;
@@ -63,13 +63,14 @@ export class UserService {
      */
     public async createUser(userData: CreateUserData): Promise<IUser> {
         try {
-            return this.userRepository.save(
+            const user = await this.userRepository.save(
                 User.fromData({
                     ...userData,
                     id: uuid(),
                     emailVerified: false,
                 }),
             );
+            return user;
         } catch (e) {
             throw new InternalServerErrorException("Error during saving of user");
         }

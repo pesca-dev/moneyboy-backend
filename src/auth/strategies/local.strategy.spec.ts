@@ -33,10 +33,20 @@ describe("LocalStrategy", () => {
             );
         });
 
-        it("shall throw exception, if credentials are wrong", async () => {
-            expect(localStrategy.validate("wrongUser", "wrongPass")).rejects.toThrowError(UnauthorizedException);
-            expect(localStrategy.validate(dummyData.username, "wrongPass")).rejects.toThrowError(UnauthorizedException);
-            expect(localStrategy.validate("wrongUser", dummyData.password)).rejects.toThrowError(UnauthorizedException);
+        it("shall throw exception, if both credentials are wrong", async () => {
+            return expect(localStrategy.validate("wrongUser", "wrongPass")).rejects.toThrowError(UnauthorizedException);
+        });
+
+        it("shall throw exception, if username is wrong", async () => {
+            return expect(localStrategy.validate("wrongUser", dummyData.password)).rejects.toThrowError(
+                UnauthorizedException,
+            );
+        });
+
+        it("shall throw exception, if password is wrong", async () => {
+            return expect(localStrategy.validate(dummyData.username, "wrongPass")).rejects.toThrowError(
+                UnauthorizedException,
+            );
         });
 
         it("shall return id, if credentials are wrong", async () => {
