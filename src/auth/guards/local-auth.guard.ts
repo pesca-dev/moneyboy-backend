@@ -7,4 +7,4 @@ import { AuthGuard } from "@nestjs/passport";
  * @author Louis Meyer
  */
 @Injectable()
-export class LocalAuthGurad extends AuthGuard("local") {}
+export class LocalAuthGuard extends AuthGuard("local") {}

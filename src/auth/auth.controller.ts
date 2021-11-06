@@ -1,5 +1,5 @@
 import { AuthService, ValidatedUserReturnType } from "@moneyboy/auth/auth.service";
-import { LocalAuthGurad } from "@moneyboy/auth/guards/local-auth.guard";
+import { LocalAuthGuard } from "@moneyboy/auth/guards/local-auth.guard";
 import { Public } from "@moneyboy/auth/guards/public.guard";
 import { RefreshTokenDTOImpl } from "@moneyboy/auth/types/refreshTokenDTO.impl";
 import { UserRegisterDTOImpl } from "@moneyboy/auth/types/userRegisterDTO.impl";
@@ -29,7 +29,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Public()
-    @UseGuards(LocalAuthGurad)
+    @UseGuards(LocalAuthGuard)
     @Throttle()
     @Post("login")
     public async login(@Req() req: Request) {
