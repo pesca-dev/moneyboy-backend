@@ -53,7 +53,7 @@ describe("JwtStrategy", () => {
                 jwtStrategy.validate({
                     sub: "wrongSessionId",
                 }),
-            ).rejects.toThrow(UnauthorizedException);
+            ).rejects.toThrowError(UnauthorizedException);
         });
 
         it("should return RequestUser on success", async () => {

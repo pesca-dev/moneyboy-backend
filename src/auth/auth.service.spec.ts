@@ -123,13 +123,13 @@ describe("AuthService", () => {
                 }
                 return undefined;
             });
-            expect(authService.register({ ...dummyUser, email: "anoter@example.com" })).rejects.toThrow(
+            expect(authService.register({ ...dummyUser, email: "anoter@example.com" })).rejects.toThrowError(
                 BadRequestException,
             );
         });
 
         it("should throw BadRequestException if emailIsVerified", () => {
-            expect(authService.register(dummyUser)).rejects.toThrow(BadRequestException);
+            expect(authService.register(dummyUser)).rejects.toThrowError(BadRequestException);
         });
 
         it("should create a user in the userService", async () => {
@@ -177,7 +177,7 @@ describe("AuthService", () => {
         });
 
         it("should throw UnauthorizedException, if user is undefined", () => {
-            expect(authService.logout()).rejects.toThrow(UnauthorizedException);
+            expect(authService.logout()).rejects.toThrowError(UnauthorizedException);
         });
 
         it("should destroy the session in sessionService", async () => {
@@ -247,8 +247,8 @@ describe("AuthService", () => {
         });
 
         it("should throw UnauthorizedException on invalid tokens", () => {
-            expect(authService.renewAccessToken(invalidSecret)).rejects.toThrow(UnauthorizedException);
-            expect(authService.renewAccessToken(invalidSessionId)).rejects.toThrow(UnauthorizedException);
+            expect(authService.renewAccessToken(invalidSecret)).rejects.toThrowError(UnauthorizedException);
+            expect(authService.renewAccessToken(invalidSessionId)).rejects.toThrowError(UnauthorizedException);
         });
 
         it("should return a new access_token", async () => {
