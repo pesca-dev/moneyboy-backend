@@ -17,7 +17,7 @@
         "noImplicitReturns": true,
         "moduleResolution": "node",
         "baseUrl": "./src",
-        "rootDir": "./src",
+        "rootDir": "./",
         "paths": {
             "@moneyboy/*" :["./*"]
         } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
@@ -39,6 +39,6 @@
         "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
         "resolveJsonModule": true
     },
-    "include": ["src/**/*.ts", "src/**/*.json", "src/**/*.js"],
+    "include": ["src/**/*.ts", "src/**/*.json", "src/**/*.js", "test/**/*.ts"],
     "exclude": ["node_modules"]
 }
