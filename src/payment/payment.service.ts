@@ -27,12 +27,13 @@ export class PaymentService {
 
         const issuer = (await this.userService.findById(from.id)) as IUser;
 
-        const payment = new Payment();
-        payment.id = uuid();
-        payment.from = issuer;
-        payment.to = target;
-        payment.date = date;
-        payment.amount = amount;
+        const payment = Payment.fromData({
+            id: uuid(),
+            from: issuer,
+            to: target,
+            date,
+            amount,
+        });
 
         return this.paymentRepository.save(payment);
     }
