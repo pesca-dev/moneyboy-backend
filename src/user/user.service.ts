@@ -4,7 +4,7 @@ import { User } from "@moneyboy/models/user";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 export interface CreateUserData {
@@ -43,6 +43,20 @@ export class UserService {
         return this.userRepository.findOne({
             where: {
                 username,
+            },
+        });
+    }
+
+    /**
+     * Find all users with a common username.
+     *
+     * @param username username to be common to
+     * @returns list of users with common usernames
+     */
+    public async findLike(username: string): Promise<IUser[]> {
+        return this.userRepository.find({
+            where: {
+                username: Like(`%${username}%`),
             },
         });
     }

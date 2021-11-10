@@ -21,7 +21,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get("")
+    @Get()
     public async getAllUsers(): Promise<IUser[]> {
         const users = await this.userService.findAll();
         return users;
@@ -39,6 +39,16 @@ export class UserController {
             throw new UnauthorizedException();
         }
         return user;
+    }
+
+    /**
+     * Get a list of users with a username like the one queried for.
+     */
+    @UseInterceptors(ClassSerializerInterceptor)
+    @Get("like")
+    public async getLike(@Req() req: Request): Promise<IUser[]> {
+        console.log(req.query);
+        return this.userService.findLike((req.query?.q as string) ?? "");
     }
 
     @UseInterceptors(ClassSerializerInterceptor)
