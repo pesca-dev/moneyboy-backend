@@ -15,6 +15,8 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { RouterModule } from "nest-router";
 
+const entities = [User, Session, Payment];
+
 /**
  * Main module for the entire app.
  *
@@ -23,16 +25,22 @@ import { RouterModule } from "nest-router";
 @Module({
     imports: [
         EventEmitterModule.forRoot(),
-        TypeOrmModule.forRoot({
-            type: "mysql",
-            host: variables.database.host,
-            port: variables.database.port,
-            username: variables.database.username,
-            password: variables.database.password,
-            database: variables.database.name,
-            entities: [User, Session, Payment],
-            // synchronize: true,
-        }),
+        process.env.NODE_ENV === "TEST"
+            ? TypeOrmModule.forRoot({
+                  type: "sqljs",
+                  entities,
+                  synchronize: true,
+              })
+            : TypeOrmModule.forRoot({
+                  type: "mysql",
+                  host: variables.database.host,
+                  port: variables.database.port,
+                  username: variables.database.username,
+                  password: variables.database.password,
+                  database: variables.database.name,
+                  entities: [User, Session, Payment],
+                  // synchronize: true,
+              }),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
