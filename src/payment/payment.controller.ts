@@ -36,20 +36,21 @@ export class PaymentController {
      */
     @Post()
     @UseInterceptors(ClassSerializerInterceptor)
-    public async createPayment(@Req() req: Request, @Body() payment: PaymentCreateDTOImpl): Promise<IPayment> {
-        return this.paymentService.create(req.user as IUser, payment);
+    public async createPayment(@Req() { user }: Request, @Body() payment: PaymentCreateDTOImpl): Promise<IPayment> {
+        return this.paymentService.create(user as IUser, payment);
     }
 
     /**
      * Get all payments that are relevant for the authed user.
-     * TODO lome:
      *
      * @returns array containing all payments
      */
     @Get()
     @UseInterceptors(ClassSerializerInterceptor)
-    public async findAll(): Promise<IPayment[]> {
-        return this.paymentService.findAll();
+    public async findAll(@Req() { user }: Request): Promise<IPayment[]> {
+        const ability = this.abilityFactory.createForPayment(user as IUser);
+        const payments = await this.paymentService.findAll();
+        return payments.filter(p => ability.can(Action.Read, p));
     }
 
     /**
@@ -61,11 +62,11 @@ export class PaymentController {
      */
     @Get(":id")
     @UseInterceptors(ClassSerializerInterceptor)
-    public async findOne(@Req() req: Request, @Param("id") id: string): Promise<IPayment> {
+    public async findOne(@Req() { user }: Request, @Param("id") id: string): Promise<IPayment> {
         const payment: IPayment | undefined = await this.paymentService.findOne(id);
         if (!payment) throw new NotFoundException();
 
-        const ability = this.abilityFactory.createForPayment(req.user as IUser);
+        const ability = this.abilityFactory.createForPayment(user as IUser);
         if (ability.cannot(Action.Read, payment)) throw new UnauthorizedException();
         return payment;
     }
@@ -79,7 +80,7 @@ export class PaymentController {
      */
     @Patch(":id")
     public async update(
-        @Req() req: Request,
+        @Req() { user }: Request,
         @Param("id") id: string,
         @Body() payload: PaymentUpdateDTOImpl,
     ): Promise<void> {
@@ -87,7 +88,7 @@ export class PaymentController {
         const payment: IPayment | undefined = await this.paymentService.findOne(id);
         if (!payment) throw new NotFoundException();
 
-        const ability = this.abilityFactory.createForPayment(req.user as IUser);
+        const ability = this.abilityFactory.createForPayment(user as IUser);
         if (ability.cannot(Action.Update, payment)) throw new UnauthorizedException();
         return this.paymentService.update({ ...payload, id });
     }
@@ -100,11 +101,11 @@ export class PaymentController {
      * @returns the payment
      */
     @Delete(":id")
-    public async remove(@Req() req: Request, @Param("id") id: string) {
+    public async remove(@Req() { user }: Request, @Param("id") id: string) {
         const payment: IPayment | undefined = await this.paymentService.findOne(id);
         if (!payment) throw new BadRequestException();
 
-        const ability = this.abilityFactory.createForPayment(req.user as IUser);
+        const ability = this.abilityFactory.createForPayment(user as IUser);
         if (ability.cannot(Action.Delete, payment)) throw new UnauthorizedException();
         return this.paymentService.remove(id);
     }
