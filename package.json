@@ -23,7 +23,7 @@
     "dependencies": {
         "@casl/ability": "^5.4.3",
         "@nestjs-modules/mailer": "^1.6.1",
-        "@nestjs/common": "^8.2.4",
+        "@nestjs/common": "^8.2.6",
         "@nestjs/core": "^8.2.6",
         "@nestjs/event-emitter": "^1.0.0",
         "@nestjs/jwt": "^8.0.0",
@@ -35,7 +35,7 @@
         "class-transformer": "^0.5.1",
         "class-validator": "^0.13.2",
         "csurf": "^1.11.0",
-        "dotenv": "^11.0.0",
+        "dotenv": "^14.2.0",
         "helmet": "^5.0.1",
         "jsonwebtoken": "^8.5.1",
         "logsen": "^2.0.1",
