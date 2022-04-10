@@ -24,6 +24,10 @@ services:
             - SMTP_PASS
             - SMTP_PORT
             - SMTP_USER
+            - APNS_KEY
+            - APNS_KEY_ID
+            - APNS_TEAM_ID
+            - APNS_TOPIC
         depends_on:
             - moneyboy-db
 
