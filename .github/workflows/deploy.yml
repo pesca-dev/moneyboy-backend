@@ -32,6 +32,7 @@ jobs:
             APNS_KEY_ID: ${{ secrets.APNS_KEY_ID }}
             APNS_TEAM_ID: ${{ secrets.APNS_TEAM_ID }}
             APNS_TOPIC: ${{ secrets.APNS_TOPIC }}
+            NODE_ENV: "production"
         strategy:
             matrix:
                 node-version: [16.x]

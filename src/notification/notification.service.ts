@@ -13,8 +13,6 @@ export class NotificationService {
                 keyId: variables.notifications.keyId,
                 teamId: variables.notifications.teamId,
             },
-            // TODO: set this to true
-            production: false,
         });
     }
 

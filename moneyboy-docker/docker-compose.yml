@@ -28,6 +28,7 @@ services:
             - APNS_KEY_ID
             - APNS_TEAM_ID
             - APNS_TOPIC
+            - NODE_ENV
         depends_on:
             - moneyboy-db
 
