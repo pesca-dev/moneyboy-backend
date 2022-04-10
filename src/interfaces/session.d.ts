@@ -14,6 +14,11 @@ export interface ISession {
      * User associated with this session.
      */
     user: IUser;
+
+    /**
+     * Notification token associated with this session.
+     */
+    notificationToken?: string;
     /**
      * Date of creation of this session.
      */

@@ -27,4 +27,10 @@ export default {
             pass: process.env.SMTP_PASS ?? "SMTP_PASS",
         },
     },
+    notifications: {
+        key: process.env.APNS_KEY ?? "",
+        keyId: process.env.APNS_KEY_ID ?? "",
+        teamId: process.env.APNS_TEAM_ID ?? "",
+        topic: process.env.APNS_TOPIC ?? "",
+    },
 };

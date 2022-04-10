@@ -14,6 +14,7 @@ const dummySession: ISession = {
         password: "password",
         email: "test@example.com",
         emailVerified: true,
+        sessions: [],
     },
 };
 

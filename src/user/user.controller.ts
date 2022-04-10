@@ -47,7 +47,6 @@ export class UserController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("like")
     public async getLike(@Req() req: Request): Promise<IUser[]> {
-        console.log(req.query);
         return this.userService.findLike((req.query?.q as string) ?? "");
     }
 

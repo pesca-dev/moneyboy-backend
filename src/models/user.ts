@@ -1,6 +1,7 @@
 import { IUser } from "@moneyboy/interfaces/user";
+import { Session } from "@moneyboy/models/session";
 import { Exclude, Expose } from "class-transformer";
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from "typeorm";
 
 /**
  * Implementation of a user, which is coupled to a database schema.
@@ -47,6 +48,10 @@ export class User implements IUser {
         default: false,
     })
     public emailVerified!: boolean;
+
+    @OneToMany(() => Session, session => session.user)
+    @JoinColumn()
+    public sessions!: Session[];
 
     /**
      * Create a new User instance from the given data.

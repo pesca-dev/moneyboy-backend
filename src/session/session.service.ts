@@ -26,7 +26,7 @@ export class SessionService {
     /**
      * Create a new sessions for a provided userid and return the id of the newly created session.
      */
-    public async createSession(userId: string): Promise<string> {
+    public async createSession(userId: string, notificationToken?: string): Promise<string> {
         const user = await this.userService.findById(userId);
         if (!user) {
             throw new UnauthorizedException();
@@ -35,7 +35,17 @@ export class SessionService {
             id: uuid(),
             user: user as User,
             createdAt: Date.now(),
+            notificationToken,
         });
+        // delete all current sessions with the same notification token
+        const sessionsWithNotificationToken = notificationToken
+            ? await this.getSessionsForNotificationToken(notificationToken)
+            : [];
+        await Promise.all(
+            sessionsWithNotificationToken.map(({ id }) => {
+                this.destroySession(id);
+            }),
+        );
         await this.sessionRepository.save(session);
         return session.id;
     }
@@ -44,10 +54,25 @@ export class SessionService {
      * Get a session with the provided id.
      */
     public async getSession(sessionId: string): Promise<ISession | undefined> {
-        const relations: Keys<Session> = ["user"];
+        const relations = ["user", "user.sessions"];
         return await this.sessionRepository.findOne({
             where: {
                 id: sessionId,
+            },
+            relations,
+        });
+    }
+
+    /**
+     * Get all sessions associated with a specified notification token.
+     *
+     * @param notificationToken notification token to get sessions with
+     */
+    public async getSessionsForNotificationToken(notificationToken: string): Promise<ISession[]> {
+        const relations: Keys<Session> = ["user"];
+        return await this.sessionRepository.find({
+            where: {
+                notificationToken,
             },
             relations,
         });

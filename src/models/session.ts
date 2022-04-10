@@ -16,6 +16,13 @@ export class Session implements ISession {
     @JoinColumn()
     user!: User;
 
+    @Column("varchar", {
+        length: 255,
+        nullable: true,
+        unique: true,
+    })
+    notificationToken?: string;
+
     @Column("bigint")
     createdAt!: number;
 

@@ -16,6 +16,7 @@ describe("User", () => {
             emailVerified: true,
             password: hashSync("dummyPassword", 10),
             username: "dummyUser",
+            sessions: [],
         };
         expect(User.fromData(dummyUser)).toEqual(dummyUser);
     });

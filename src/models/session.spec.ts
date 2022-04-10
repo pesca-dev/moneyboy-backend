@@ -17,6 +17,7 @@ describe("Session", () => {
             emailVerified: true,
             password: hashSync("dummyPassword", 10),
             username: "dummyUser",
+            sessions: [],
         };
 
         const dummySession: ISession = {
@@ -24,6 +25,8 @@ describe("Session", () => {
             createdAt: Date.now(),
             user: dummyUser,
         };
+        dummyUser.sessions.push(dummySession);
+
         expect(Session.fromData(dummySession)).toEqual(dummySession);
     });
 });

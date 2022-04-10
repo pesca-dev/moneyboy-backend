@@ -47,8 +47,8 @@ export class AuthService {
     /**
      * Log a user in and return the access token for this user.
      */
-    public async login(user: ValidatedUserReturnType) {
-        const sessionId = await this.sessionService.createSession(user.id);
+    public async login(user: ValidatedUserReturnType, notificationToken?: string) {
+        const sessionId = await this.sessionService.createSession(user.id, notificationToken);
         const payload: JWTToken = { sub: sessionId };
 
         return {

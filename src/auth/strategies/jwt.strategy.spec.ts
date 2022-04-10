@@ -15,6 +15,7 @@ const dummyUser: IUser = {
     emailVerified: true,
     password: hashSync(dummyPassword, 10),
     username: "dummyUser",
+    sessions: [],
 };
 const dummySession: ISession = {
     id: uuid(),
