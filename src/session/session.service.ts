@@ -54,7 +54,7 @@ export class SessionService {
      * Get a session with the provided id.
      */
     public async getSession(sessionId: string): Promise<ISession | undefined> {
-        const relations: Keys<Session> = ["user"];
+        const relations = ["user", "user.sessions"];
         return await this.sessionRepository.findOne({
             where: {
                 id: sessionId,
