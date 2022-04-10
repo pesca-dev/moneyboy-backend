@@ -1,6 +1,7 @@
 import { PaymentCreateDTO, PaymentUpdateDTO } from "@moneyboy/interfaces/payment";
 import { IUser } from "@moneyboy/interfaces/user";
 import { Payment } from "@moneyboy/models/payment";
+import { NotificationService } from "@moneyboy/notification/notification.service";
 import { PaymentService } from "@moneyboy/payment/payment.service";
 import { UserService } from "@moneyboy/user/user.service";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
@@ -40,14 +41,18 @@ const dummyPayment: PaymentCreateDTO = {
 
 describe("PaymentService", () => {
     let userServiceMock: UserService;
+    let notificationsService: NotificationService;
     let paymentRepoMock: Repository<Payment>;
 
     let paymentService: PaymentService;
 
     beforeEach(() => {
         userServiceMock = new (jest.createMockFromModule<any>("@moneyboy/user/user.service").UserService)();
+        notificationsService = new (jest.createMockFromModule<any>(
+            "@moneyboy/notification/notification.service",
+        ).NotificationService)();
         paymentRepoMock = new (jest.createMockFromModule<any>("typeorm").Repository)() as Repository<Payment>;
-        paymentService = new PaymentService(userServiceMock, paymentRepoMock);
+        paymentService = new PaymentService(userServiceMock, notificationsService, paymentRepoMock);
     });
 
     describe("create", () => {

@@ -31,6 +31,6 @@ export default {
         key: process.env.APNS_KEY ?? "",
         keyId: process.env.APNS_KEY_ID ?? "",
         teamId: process.env.APNS_TEAM_ID ?? "",
-        topci: process.env.APNS_TOPIC ?? "",
+        topic: process.env.APNS_TOPIC ?? "",
     },
 };
