@@ -1,6 +1,7 @@
 import { AuthService, ValidatedUserReturnType } from "@moneyboy/auth/auth.service";
 import { LocalAuthGuard } from "@moneyboy/auth/guards/local-auth.guard";
 import { Public } from "@moneyboy/auth/guards/public.guard";
+import { UserLoginDTOImpl } from "@moneyboy/auth/types/loginDTO.impl";
 import { RefreshTokenDTOImpl } from "@moneyboy/auth/types/refreshTokenDTO.impl";
 import { UserRegisterDTOImpl } from "@moneyboy/auth/types/userRegisterDTO.impl";
 import {
@@ -32,10 +33,10 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Throttle()
     @Post("login")
-    public async login(@Req() req: Request) {
+    public async login(@Req() req: Request, @Body() { notificationToken }: UserLoginDTOImpl) {
         // in this case, the req.user property is actually not of type ISession, but
         // just contains a field `id`, which holds the id of the already authenticated user.
-        return this.authService.login(req.user as ValidatedUserReturnType);
+        return this.authService.login(req.user as ValidatedUserReturnType, notificationToken);
     }
 
     @Public()

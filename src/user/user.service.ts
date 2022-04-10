@@ -28,10 +28,12 @@ export class UserService {
     ) {}
 
     public async findAll(): Promise<IUser[]> {
+        const relations: Keys<IUser> = ["sessions"];
         const users = await this.userRepository.find({
             where: {
                 emailVerified: true,
             },
+            relations,
         });
         return users;
     }
@@ -40,10 +42,12 @@ export class UserService {
      * Find a user by its username.
      */
     public async findByName(username: string): Promise<IUser | undefined> {
+        const relations: Keys<IUser> = ["sessions"];
         return this.userRepository.findOne({
             where: {
                 username,
             },
+            relations,
         });
     }
 
@@ -54,10 +58,12 @@ export class UserService {
      * @returns list of users with common usernames
      */
     public async findLike(username: string): Promise<IUser[]> {
+        const relations: Keys<IUser> = ["sessions"];
         return this.userRepository.find({
             where: {
                 username: Like(`%${username}%`),
             },
+            relations,
         });
     }
 
@@ -65,10 +71,12 @@ export class UserService {
      * Find a user by its id.
      */
     public async findById(id: string): Promise<IUser | undefined> {
+        const relations: Keys<IUser> = ["sessions"];
         return this.userRepository.findOne({
             where: {
                 id,
             },
+            relations,
         });
     }
 
@@ -82,6 +90,7 @@ export class UserService {
                     ...userData,
                     id: uuid(),
                     emailVerified: false,
+                    sessions: [],
                 }),
             );
             return user;

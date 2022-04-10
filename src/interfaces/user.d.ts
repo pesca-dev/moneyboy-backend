@@ -1,3 +1,5 @@
+import { Session } from "@moneyboy/models/session";
+
 /**
  * Data send during registration of a new user.
  *
@@ -8,6 +10,12 @@ export interface UserRegisterDTO {
     displayName: string;
     password: string;
     email: string;
+}
+
+export interface UserLoginDTO {
+    username: string;
+    password: string;
+    notificationToken?: string;
 }
 
 /**
@@ -41,4 +49,9 @@ export interface IUser {
      * Flag for indicating, that a user verified their email.
      */
     emailVerified: boolean;
+
+    /**
+     * Sessions for this user
+     */
+    sessions: Session[];
 }
