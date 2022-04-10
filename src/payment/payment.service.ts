@@ -56,7 +56,6 @@ export class PaymentService {
         };
         notification.pushType = "alert";
         notification.priority = 10;
-        notification.badge = 10;
 
         await this.notificationsService.send(notification, notificationTokens);
         return savedPayment;
