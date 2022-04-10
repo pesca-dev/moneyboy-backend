@@ -16,6 +16,7 @@ describe("Payment", () => {
             emailVerified: true,
             password: hashSync("dummyPassword", 10),
             username: "dummyUser",
+            sessions: [],
         };
         const targetUser: IUser = {
             id: uuid(),
@@ -24,6 +25,7 @@ describe("Payment", () => {
             emailVerified: true,
             password: hashSync("otherPassword", 10),
             username: "otherUser",
+            sessions: [],
         };
         const dummyPayment: Payment = Payment.fromData({
             id: uuid(),

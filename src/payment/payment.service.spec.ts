@@ -16,6 +16,7 @@ const dummyUsers: IUser[] = [
         emailVerified: true,
         password: hashSync("dummyPassword", 10),
         username: "dummyUser",
+        sessions: [],
     },
     {
         id: uuid(),
@@ -24,6 +25,7 @@ const dummyUsers: IUser[] = [
         emailVerified: true,
         password: hashSync("dummyPassword", 10),
         username: "otherUser",
+        sessions: [],
     },
 ];
 

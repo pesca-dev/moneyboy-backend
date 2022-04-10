@@ -15,6 +15,7 @@ const dummyUser: IUser = {
     emailVerified: true,
     password: hashSync("dummyPassword", 10),
     username: "dummyUser",
+    sessions: [],
 };
 
 const otherUser: IUser = {
@@ -24,6 +25,7 @@ const otherUser: IUser = {
     emailVerified: true,
     password: hashSync("dummyPassword2", 10),
     username: "dummyUser2",
+    sessions: [],
 };
 
 const unverifiedUser: IUser = {
@@ -33,6 +35,7 @@ const unverifiedUser: IUser = {
     emailVerified: false,
     password: hashSync("dummyPassword2", 10),
     username: "dummyUser3",
+    sessions: [],
 };
 
 const users: IUser[] = [dummyUser, otherUser, unverifiedUser];
@@ -60,7 +63,7 @@ describe("UserService", () => {
 
         it("returns only verified users", async () => {
             await userService.findAll();
-            expect(findMock).toHaveBeenCalledWith({ where: { emailVerified: true } });
+            expect(findMock).toHaveBeenCalledWith({ where: { emailVerified: true }, relations: ["sessions"] });
         });
 
         it("returns users returned by repo", () => {

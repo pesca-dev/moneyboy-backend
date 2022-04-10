@@ -14,6 +14,7 @@ const issueUser: IUser = {
     emailVerified: true,
     password: hashSync("dummyPassword", 10),
     username: "dummyUser",
+    sessions: [],
 };
 
 const targetUser: IUser = {
@@ -23,6 +24,7 @@ const targetUser: IUser = {
     emailVerified: true,
     password: hashSync("otherPassword", 10),
     username: "otherUser",
+    sessions: [],
 };
 
 const thirdUser: IUser = {
@@ -32,6 +34,7 @@ const thirdUser: IUser = {
     emailVerified: true,
     password: hashSync("thirdPassword", 10),
     username: "thirdUser",
+    sessions: [],
 };
 
 const dummyPayment: Payment = Payment.fromData({
