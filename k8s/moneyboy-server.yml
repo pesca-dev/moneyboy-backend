@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        io.kompose.service: moneyboy-server-deployment
+    name: moneyboy-server-deployment
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            io.kompose.service: moneyboy-server-deployment
+    strategy: {}
+    template:
+        metadata:
+            labels:
+                io.kompose.service: moneyboy-server-deployment
+        spec:
+            containers:
+                - image: ghcr.io/pesca-dev/moneyboy-server
+                  imagePullPolicy: Always
+                  name: moneyboy-server-deployment
+                  ports:
+                      - containerPort: 3000
+                  resources: {}
+                  envFrom:
+                      - secretRef:
+                            name: webserver-secret
+            restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        io.kompose.service: moneyboy-server-service
+    name: moneyboy-server-service
+spec:
+    ports:
+        - protocol: TCP
+          name: web
+          port: 3000
+    selector:
+        io.kompose.service: moneyboy-server-deployment
+status:
+    loadBalancer: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+    name: moneyboy-server-ingress
+    namespace: default
+spec:
+    entryPoints:
+        - websecure
+    routes:
+        - match: Host(`rytlock.pesca.dev`)
+          kind: Rule
+          services:
+              - name: moneyboy-server-service
+                port: 3000
+    tls:
+        certResolver: le
