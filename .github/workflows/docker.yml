@@ -25,7 +25,8 @@ jobs:
                   registry: ghcr.io
                   username: ${{ github.actor }}
                   password: ${{ secrets.GH_PAT }}
-            - name: Build Server Docker image
-              run: |
-                  docker build . --tag ghcr.io/${{ github.repository_owner }}/moneyboy-server:latest
-                  docker push ghcr.io/${{ github.repository_owner }}/moneyboy-server:latest
+            - name: Build and Push Docker Image
+              uses: docker/build-push-action@v2
+              with:
+                  push: true
+                  tags: ghcr.io/${{ github.repository_owner }}/moneyboy-server:latest
