@@ -1,15 +1,23 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+    name: moneyboy-server
+
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
     creationTimestamp: null
     labels:
         io.kompose.service: moneyboy-server-db-claim
     name: moneyboy-server-db-claim
+    namespace: moneyboy-server
 spec:
     accessModes:
         - ReadWriteOnce
     resources:
         requests:
+            # TODO: Maybe increase this
             storage: 100Mi
 status: {}
 
@@ -20,6 +28,7 @@ metadata:
     labels:
         io.kompose.service: moneyboy-server-db-deployment
     name: moneyboy-server-db-deployment
+    namespace: moneyboy-server
 spec:
     replicas: 1
     selector:
@@ -60,6 +69,7 @@ spec:
                   persistentVolumeClaim:
                       claimName: moneyboy-server-db-claim
 status: {}
+
 ---
 apiVersion: v1
 kind: Service
@@ -67,6 +77,7 @@ metadata:
     labels:
         io.kompose.service: moneyboy-server-db-service
     name: moneyboy-server-db-service
+    namespace: moneyboy-server
 spec:
     ports:
         - name: "3306"
@@ -76,3 +87,69 @@ spec:
         io.kompose.service: moneyboy-server-db-deployment
 status:
     loadBalancer: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        io.kompose.service: moneyboy-server-deployment
+    name: moneyboy-server-deployment
+    namespace: moneyboy-server
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            io.kompose.service: moneyboy-server-deployment
+    strategy: {}
+    template:
+        metadata:
+            labels:
+                io.kompose.service: moneyboy-server-deployment
+        spec:
+            containers:
+                - image: ghcr.io/pesca-dev/moneyboy-server
+                  imagePullPolicy: Always
+                  name: moneyboy-server-deployment
+                  ports:
+                      - containerPort: 3000
+                  resources: {}
+                  envFrom:
+                      - secretRef:
+                            name: webserver-secret
+            restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        io.kompose.service: moneyboy-server-service
+    name: moneyboy-server-service
+    namespace: moneyboy-server
+spec:
+    ports:
+        - protocol: TCP
+          name: web
+          port: 3000
+    selector:
+        io.kompose.service: moneyboy-server-deployment
+status:
+    loadBalancer: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+    name: moneyboy-server-ingress
+    namespace: moneyboy-server
+spec:
+    entryPoints:
+        - websecure
+    routes:
+        - match: Host(`rytlock.pesca.dev`)
+          kind: Rule
+          services:
+              - name: moneyboy-server-service
+                port: 3000
+    tls:
+        certResolver: le
