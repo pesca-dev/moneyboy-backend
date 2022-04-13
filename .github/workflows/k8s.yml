@@ -1,0 +1,60 @@
+name: K8s
+
+on:
+  workflow_run:
+    workflows:
+      - Docker
+    types:
+      - completed
+
+jobs:
+  deploy-on-cluster:
+    name: Deploy On Cluster
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/k8s-set-context@v2
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.K8S_CONFIG }}
+      - uses: Azure/k8s-deploy@v1.4
+        with:
+          manifests: |
+            k8s/moneyboy-namespace.yml
+          kubectl-version: "latest"
+      - name: Generate Secrets
+        run: |
+          kubectl create secret -n moneyboy-server generic moneyboy-server-secret \
+            --save-config \
+            --dry-run=client \
+            --from-literal=ACCESS_TOKEN_SECRET="${{ secrets.ACCESS_TOKEN_SECRET }}" \
+            --from-literal=DB_HOST="${{ secrets.DB_HOST }}" \
+            --from-literal=DB_PORT="${{ secrets.DB_PORT }}" \
+            --from-literal=HOST="${{ secrets.HOST }}" \
+            --from-literal=MYSQL_DATABASE="${{ secrets.MYSQL_DATABASE }}" \
+            --from-literal=MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
+            --from-literal=MYSQL_ROOT_PASSWORD="${{ secrets.MYSQL_ROOT_PASSWORD }}" \
+            --from-literal=MYSQL_USER="${{ secrets.MYSQL_USER }}" \
+            --from-literal=REFRESH_TOKEN_SECRET="${{ secrets.REFRESH_TOKEN_SECRET }}" \
+            --from-literal=SMTP_ADDR="${{ secrets.SMTP_ADDR }}" \
+            --from-literal=SMTP_HOST="${{ secrets.SMTP_HOST }}" \
+            --from-literal=SMTP_PASS="${{ secrets.SMTP_PASS }}" \
+            --from-literal=SMTP_PORT="${{ secrets.SMTP_PORT }}" \
+            --from-literal=SMTP_USER="${{ secrets.SMTP_USER }}" \
+            --from-literal=VERIFY_TOKEN_SECRET="${{ secrets.VERIFY_TOKEN_SECRET }}" \
+            --from-literal=APNS_KEY="${{ secrets.APNS_KEY }}" \
+            --from-literal=APNS_KEY_ID="${{ secrets.APNS_KEY_ID }}" \
+            --from-literal=APNS_TEAM_ID="${{ secrets.APNS_TEAM_ID }}" \
+            --from-literal=APNS_TOPIC="${{ secrets.APNS_TOPIC }}" \
+            --from-literal=NODE_ENV="${{ secrets.NODE_ENV }}" \
+            -o yaml | \
+            kubectl apply -f -
+      - uses: Azure/k8s-deploy@v1.4
+        with:
+          manifests: |
+            k8s/moneyboy-db.yml
+            k8s/moneyboy-deployment.yml
+          kubectl-version: "latest"
+          namespace: moneyboy-server
