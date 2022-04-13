@@ -1,4 +1,4 @@
-name: publish
+name: k8s
 
 on: [push]
 
@@ -68,3 +68,8 @@ jobs:
                     --from-literal=NODE_ENV="${{ secrets.NODE_ENV }}" \
                     -o yaml | \
                     kubectl apply -f -
+            - uses: Azure/k8s-deploy@v1.4
+              with:
+                  manifests: |
+                      k8s/moneyboy-db.yml
+                      k8s/moneyboy-deployment.yml
