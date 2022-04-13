@@ -59,7 +59,7 @@ spec:
     entryPoints:
         - websecure
     routes:
-        - match: Host(`rytlock.pesca.dev`)
+        - match: Host(`moneyboy.pesca.dev`)
           kind: Rule
           services:
               - name: moneyboy-server-service
