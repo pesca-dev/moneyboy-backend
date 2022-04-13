@@ -4,6 +4,9 @@ metadata:
     name: moneyboy-server
 
 ---
+# -------------------------------------
+#          DATABASE CONFIGURATION
+# -------------------------------------
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -89,6 +92,10 @@ status:
     loadBalancer: {}
 
 ---
+# -------------------------------------
+#          SERVER CONFIGURATION
+# -------------------------------------
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
