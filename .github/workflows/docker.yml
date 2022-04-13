@@ -73,4 +73,5 @@ jobs:
                   manifests: |
                       k8s/moneyboy-db.yml
                       k8s/moneyboy-deployment.yml
+                  kubectl-version: "latest"
                   namespace: moneyboy-server
