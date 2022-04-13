@@ -3,7 +3,7 @@ name: Docker
 on:
   workflow_run:
     workflows:
-      - Docker
+      - Build
     types:
       - completed
 
