@@ -17,6 +17,7 @@ export class NotificationService {
     }
 
     public async send(notification: Notification, recepients: string | string[]): Promise<Responses> {
-        return this.provider.send(notification, recepients);
+        console.log(`Sending notification to ${recepients}`);
+        return this.provider.send(notification, recepients).catch(console.log).then();
     }
 }
