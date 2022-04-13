@@ -73,3 +73,4 @@ jobs:
                   manifests: |
                       k8s/moneyboy-db.yml
                       k8s/moneyboy-deployment.yml
+                  namespace: moneyboy-server
