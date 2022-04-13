@@ -1,16 +1,9 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-    name: moneyboy-server
-
----
 # -------------------------------------
 #          DATABASE CONFIGURATION
 # -------------------------------------
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-    creationTimestamp: null
     labels:
         io.kompose.service: moneyboy-server-db-claim
     name: moneyboy-server-db-claim
