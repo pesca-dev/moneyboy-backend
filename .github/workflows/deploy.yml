@@ -1,54 +1,54 @@
 name: Deploy
 
 on:
-    workflow_run:
-        workflows: ["Build"]
-        branches: [main]
-        types:
-            - completed
+  workflow_run:
+    workflows: ["Build"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
-    deploy:
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
-        runs-on: self-hosted
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: self-hosted
 
-        env:
-            ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-            DB_HOST: ${{ secrets.DB_HOST }}
-            DB_PORT: ${{ secrets.DB_PORT }}
-            HOST: ${{ secrets.HOST }}
-            MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-            MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-            MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-            MYSQL_USER: ${{ secrets.MYSQL_USER }}
-            REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-            SMTP_ADDR: ${{ secrets.SMTP_ADDR }}
-            SMTP_HOST: ${{ secrets.SMTP_HOST }}
-            SMTP_PASS: ${{ secrets.SMTP_PASS }}
-            SMTP_PORT: ${{ secrets.SMTP_PORT }}
-            SMTP_USER: ${{ secrets.SMTP_USER }}
-            VERIFY_TOKEN_SECRET: ${{ secrets.VERIFY_TOKEN_SECRET }}
-            APNS_KEY: ${{ secrets.APNS_KEY }}
-            APNS_KEY_ID: ${{ secrets.APNS_KEY_ID }}
-            APNS_TEAM_ID: ${{ secrets.APNS_TEAM_ID }}
-            APNS_TOPIC: ${{ secrets.APNS_TOPIC }}
-            NODE_ENV: "production"
-        strategy:
-            matrix:
-                node-version: [16.x]
+    env:
+      ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      HOST: ${{ secrets.HOST }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+      SMTP_ADDR: ${{ secrets.SMTP_ADDR }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      VERIFY_TOKEN_SECRET: ${{ secrets.VERIFY_TOKEN_SECRET }}
+      APNS_KEY: ${{ secrets.APNS_KEY }}
+      APNS_KEY_ID: ${{ secrets.APNS_KEY_ID }}
+      APNS_TEAM_ID: ${{ secrets.APNS_TEAM_ID }}
+      APNS_TOPIC: ${{ secrets.APNS_TOPIC }}
+      NODE_ENV: "production"
+    strategy:
+      matrix:
+        node-version: [16.x]
 
-        steps:
-            - uses: actions/checkout@v2
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "npm"
-            - name: Install dependencies
-              run: NODE_ENV=development npm ci
-            - name: Build the project
-              run: npm run build
-            - name: Build docker images
-              run: docker-compose -f moneyboy-docker/docker-compose.yml build
-            - name: Deploy docker containers
-              run: docker-compose -f moneyboy-docker/docker-compose.yml up -d
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install dependencies
+        run: NODE_ENV=development npm ci
+      - name: Build the project
+        run: npm run build
+      - name: Build docker images
+        run: docker-compose -f moneyboy-docker/docker-compose.yml build
+      - name: Deploy docker containers
+        run: docker-compose -f moneyboy-docker/docker-compose.yml up -d
