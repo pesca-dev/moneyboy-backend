@@ -43,7 +43,7 @@
         "logsen": "^2.0.1",
         "mysql": "^2.18.1",
         "nest-router": "^1.0.9",
-        "nodemailer": "^6.7.2",
+        "nodemailer": "^6.9.9",
         "passport": "^0.4.1",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
