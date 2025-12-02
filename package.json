@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@casl/ability": "^5.4.3",
-        "@nestjs-modules/mailer": "^1.11.2",
+        "@nestjs-modules/mailer": "^2.0.1",
         "@nestjs/common": "^11.1.6",
         "@nestjs/core": "^11.0.11",
         "@nestjs/event-emitter": "^1.4.2",
@@ -43,7 +43,7 @@
         "logsen": "^2.0.1",
         "mysql": "^2.18.1",
         "nest-router": "^1.0.9",
-        "nodemailer": "^6.9.9",
+        "nodemailer": "^7.0.11",
         "passport": "^0.4.1",
         "passport-jwt": "^4.0.1",
         "passport-local": "^1.0.0",
